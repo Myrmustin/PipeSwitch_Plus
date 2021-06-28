@@ -11,10 +11,11 @@ def main():
     model_name_list = model_name.split(';')
     batch_size = int(sys.argv[2])
 
-    # Load image
-    data = get_data(model_name, batch_size)
+    
 
     for model_name_o in model_name_list:
+        # Load image
+        data = get_data(model_name_o, batch_size)
         timestamp('client', 'before_request')
 
         # Connect
