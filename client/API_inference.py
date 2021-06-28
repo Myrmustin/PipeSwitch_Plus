@@ -12,6 +12,7 @@ def main():
     model_name_list = model_name.split(';')
     # Load image
     #data = get_data(model_name, batch_size)
+    print('List: ' + str(model_name_list))
     cur_data = ''
     latency_list = []
     for cur_model in model_name_list:
@@ -65,15 +66,11 @@ def main():
         timestamp('**********', '**********')
         latency = (time_2 - time_1) * 1000
         latency_list.append(latency)
-        
+        latency = (time_2 - time_1) * 1000
+        print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
         # time.sleep(1)
 
-    print()
-    print()
-    print()
-    stable_latency_list = latency_list[10:]
-    print ('Latency: %f ms (stdev: %f)' % (statistics.mean(stable_latency_list), 
-                                           statistics.stdev(stable_latency_list)))
+    
 
 if __name__ == '__main__':
     main()
