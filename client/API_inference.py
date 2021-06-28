@@ -1,3 +1,4 @@
+from _typeshed import NoneType
 import sys
 import time
 import struct
@@ -11,11 +12,19 @@ def main():
     model_name_list = model_name.split(';')
     batch_size = int(sys.argv[2])
 
-    
+    cur_data = None
 
     for model_name_o in model_name_list:
         # Load image
-        data = get_data(model_name_o, batch_size)
+        if(cur_data==None):
+            data = get_data(model_name_o, batch_size)
+            cur_data = model_name_o
+        else:
+            if(cur_data == model_name_o):
+                print("Using Same model")
+            else:
+                data = get_data(model_name_o, batch_size)
+                cur_data = model_name_o
         timestamp('client', 'before_request')
 
         # Connect
