@@ -10,7 +10,7 @@ from util.util import TcpClient, timestamp
 
 def main():
     model_nam = sys.argv[1]
-    inferencePool = sys.argv[2].split(;)   
+    inferencePool = sys.argv[2].split(';')   
     print(inferencePool[:])
     orderedPool = [] 
     for i in 3:

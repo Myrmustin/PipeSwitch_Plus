@@ -1,4 +1,3 @@
-from _typeshed import NoneType
 import sys
 import time
 import struct
@@ -12,9 +11,12 @@ def main():
     model_name_list = model_name.split(';')
     batch_size = int(sys.argv[2])
 
-    cur_data = None
+    cur_data = ""
+    # Load image
+    #data = get_data(model_name, batch_size)
 
     for model_name_o in model_name_list:
+        timestamp('client', 'before_request')
         # Load image
         if(cur_data==None):
             data = get_data(model_name_o, batch_size)
@@ -25,8 +27,6 @@ def main():
             else:
                 data = get_data(model_name_o, batch_size)
                 cur_data = model_name_o
-        timestamp('client', 'before_request')
-
         # Connect
         client = TcpClient('localhost', 12345)
         timestamp('client', 'after_connect for model: ' + model_name_o)
@@ -64,7 +64,7 @@ def main():
 
         timestamp('**********', '**********')
         latency = (time_2 - time_1) * 1000
-        print("Inference request on machine X using model " + model_name_o + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
+        print("Inference request on machine X using model " + model_name_o + " (" + str(batch_size + " batchsize) completed for: " + str(latency) + "ms. ")
         
 
 if __name__ == '__main__':
