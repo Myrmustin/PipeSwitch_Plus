@@ -9,12 +9,15 @@ from pipeswitch.worker_terminate import WorkerTermThd
 from util.util import timestamp
 
 class WorkerProc(Process):
-    def __init__(self, model_list, pipe, param_trans_pipe, term_pipe):
+    def __init__(self, model_list, pipe, param_trans_pipe, term_pipe, cleanup = True):
         super(WorkerProc, self).__init__()
         self.model_list = model_list
         self.pipe = pipe
         self.param_trans_pipe = param_trans_pipe
         self.term_pipe = term_pipe
+        #added
+        self.Memmorypointer = 0
+        self.cleanup = cleanup
         
     def run(self):
         timestamp('worker', 'start')
@@ -22,7 +25,8 @@ class WorkerProc(Process):
         # Warm up CUDA and get shared cache
         torch.randn(1024, device='cuda')
         time.sleep(1)
-        torch.cuda.recv_shared_cache() # pylint: disable=no-member
+        #added
+        self.Memmorypointer = torch.cuda.recv_shared_cache() # pylint: disable=no-member
         timestamp('worker', 'share_gpu_memory')
         
         # Create requried variables
@@ -75,9 +79,10 @@ class WorkerProc(Process):
             except Exception as e:
                 complete_queue.put('FNSH')
 
-            # start do cleaning
-            TERMINATE_SIGNAL[0] = 0
-            timestamp('worker_comp_thd', 'complete')
+            if(self.cleanup == True):
+                # start do cleaning
+                TERMINATE_SIGNAL[0] = 0
+                timestamp('worker_comp_thd', 'complete')
 
             model_summary.reset_initialized(model_summary.model)
 
