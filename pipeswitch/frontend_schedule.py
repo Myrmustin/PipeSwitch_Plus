@@ -29,9 +29,6 @@ class FrontendScheduleThd(threading.Thread):
             # Get request
             
             agent, followup = self.qin.get()
-            new_pipe.send((agent, followup ))
-            timestamp('schedule', 'send_followup')
-
 
             model_name = self.qin.get()
             print("Search agent: " + str(agent))
@@ -49,6 +46,10 @@ class FrontendScheduleThd(threading.Thread):
             self.cur_w_idx %= len(self.worker_list)
             new_pipe, _, param_trans_pipe_parent, _ = self.worker_list[self.cur_w_idx]
 
+            #lets go
+            new_pipe.send((agent, followup ))
+            timestamp('schedule', 'send_followup')
+            
             # Send request to new worker
             new_pipe.send((agent, model_name))
             timestamp('schedule', 'notify_new_worker')
