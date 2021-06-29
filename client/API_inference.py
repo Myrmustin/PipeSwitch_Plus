@@ -18,7 +18,7 @@ def main():
     for cur_model in model_name_list:
         timestamp('client', 'before_request')
 
-        data = get_data(model_name, batch_size)
+        data = get_data(cur_model, batch_size)
         '''if(cur_data==''):
             data = get_data(cur_model, batch_size)
             cur_data = cur_model
