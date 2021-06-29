@@ -33,7 +33,7 @@ def main():
         time_1 = time.time()
 
         # Serialize data
-        task_name = model_name + '_inference'
+        task_name = cur_model + '_inference'
         task_name_b = task_name.encode()
         task_name_length = len(task_name_b)
         task_name_length_b = struct.pack('I', task_name_length)
