@@ -29,6 +29,7 @@ class FrontendScheduleThd(threading.Thread):
             # Get request
             
             agent, followup = self.qin.get()
+            print('Followup at schedule: ' + str(followup))
 
             model_name = self.qin.get()
             print("Search agent: " + str(agent))
@@ -51,7 +52,7 @@ class FrontendScheduleThd(threading.Thread):
             timestamp('schedule', 'send_followup')
             
             # Send request to new worker
-            new_pipe.send((agent, model_name))
+            new_pipe.send((model_name))
             timestamp('schedule', 'notify_new_worker')
 
             # Wait for current worker to terminate
