@@ -18,7 +18,8 @@ def main():
     for cur_model in model_name_list:
         timestamp('client', 'before_request')
 
-        if(cur_data==''):
+        data = get_data(model_name, batch_size)
+        '''if(cur_data==''):
             data = get_data(cur_model, batch_size)
             cur_data = cur_model
         else:
@@ -27,12 +28,15 @@ def main():
             else:
                 data = get_data(cur_model, batch_size)
                 cur_data = cur_model
+        '''
         # Connect
         client = TcpClient('localhost', 12345)
         timestamp('client', 'after_connect')
         time_1 = time.time()
 
         # Serialize data
+        following = 3
+        following_b = struct.pack('I', following)
         task_name = cur_model + '_inference'
         task_name_b = task_name.encode()
         task_name_length = len(task_name_b)
@@ -53,6 +57,7 @@ def main():
         client.send(task_name_b)
         client.send(length_b)
         client.send(data_b)
+        client.send(following_b)
         timestamp('client', 'after_send')
 
         # Get reply

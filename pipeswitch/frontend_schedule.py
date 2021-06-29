@@ -28,6 +28,8 @@ class FrontendScheduleThd(threading.Thread):
         while True:
             # Get request
             agent, model_name = self.qin.get()
+            print("Search agent: " + str(agent))
+            print("Search model_name:  " + str(model_name))
             timestamp('schedule', 'get_request')
 
             # Get current worker
