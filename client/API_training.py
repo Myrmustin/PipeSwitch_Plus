@@ -31,6 +31,17 @@ def send_request(client, task_name, data):
         client.send(data_b)
     timestamp('client', 'after_request_%s' % task_name)
 
+def recv_response(client):
+    reply_b = client.recv(4)
+    reply = reply_b.decode()
+    timestamp('client', 'after_reply')
+
+def close_connection(client):
+    model_name_length = 0
+    model_name_length_b = struct.pack('I', model_name_length)
+    client.send(model_name_length_b)
+    timestamp('client', 'close_connection')
+
 def main():
     model_name = sys.argv[1]
     batch_size = int(sys.argv[2])
@@ -52,7 +63,7 @@ def main():
     time_2 = time.time()
 
     latency = (time_2 - time_1) * 1000
-    print("Training of " + model_nameon + " on machine X completed for: " + latency + "ms. ")
+    print("Training of " + model_name + " on machine X completed for: " + latency + "ms. ")
 
 if __name__ == '__main__':
     main()

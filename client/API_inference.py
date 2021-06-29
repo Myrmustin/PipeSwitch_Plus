@@ -53,6 +53,7 @@ def main():
         print("CurD: " + cur_data)
         #print("Data: " + str(data))
         # Send Data
+        client.send(following_b)
         client.send(task_name_length_b)
         client.send(task_name_b)
         client.send(length_b)

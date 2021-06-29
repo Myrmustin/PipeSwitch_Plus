@@ -27,7 +27,13 @@ class FrontendScheduleThd(threading.Thread):
 
         while True:
             # Get request
-            agent, model_name = self.qin.get()
+            
+            agent, followup = self.qin.get()
+            new_pipe.send((agent, followup ))
+            timestamp('schedule', 'send_followup')
+
+
+            model_name = self.qin.get()
             print("Search agent: " + str(agent))
             print("Search model_name:  " + str(model_name))
             timestamp('schedule', 'get_request')
@@ -55,6 +61,10 @@ class FrontendScheduleThd(threading.Thread):
             data_b = self.qin.get()
             new_pipe.send(data_b)
             timestamp('schedule', 'send_data')
+
+            followup = self.qin.get()
+            new_pipe.send(followup)
+            timestamp('schedule', 'send_followup')
 
             # Allocate cache to streams
             with torch.cuda.stream(cuda_stream_for_parameter):

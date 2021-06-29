@@ -14,13 +14,18 @@ class FrontendTcpThd(threading.Thread):
         while True:
             timestamp('tcp', 'listening')
             
+            followup_b = self.agent.recv(4)
+            followup = struct.unpack('I', followup_b)[0]
+            timestamp('tcp', 'get_followup')
+            self.qout.put((self.agent, followup))
+
             model_name_length_b = self.agent.recv(4)
             model_name_length = struct.unpack('I', model_name_length_b)[0]
             if model_name_length == 0:
                 break
             model_name_b = self.agent.recv(model_name_length)
             model_name = model_name_b.decode()
-            self.qout.put((self.agent, model_name))
+            self.qout.put(model_name)
             timestamp('tcp', 'get_name')
 
             data_length_b = self.agent.recv(4)
@@ -31,4 +36,5 @@ class FrontendTcpThd(threading.Thread):
                 data_b = None
             timestamp('tcp', 'get_data')
             self.qout.put(data_b)
+
             timestamp('tcp', 'enqueue_request')
