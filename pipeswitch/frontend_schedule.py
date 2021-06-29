@@ -85,13 +85,18 @@ class FrontendScheduleThd(threading.Thread):
                 timestamp('schedule', 'transfer_parameters for request : ' + str(index) + " (in chedule)")
 
                 # Clear status
-                with torch.cuda.stream(cuda_stream_for_parameter):
-                    torch.cuda.clear_shared_cache() # pylint: disable=no-member
-                timestamp('schedule', 'clear_status')
+            with torch.cuda.stream(cuda_stream_for_parameter):
+                torch.cuda.clear_shared_cache() # pylint: disable=no-member
+            timestamp('schedule', 'clear_status')
 
-                # Recv response
-                res = new_pipe.recv()
-                timestamp('schedule', 'get_response')
+            # Recv response
+            res1 = new_pipe.recv()
+            # Recv response
+            res2 = new_pipe.recv()
+            # Recv response
+            res3 = new_pipe.recv()
+            timestamp('schedule', 'get_response')
+
 
 
     def _load_model(self, model_name):
