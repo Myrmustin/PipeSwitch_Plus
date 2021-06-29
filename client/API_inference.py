@@ -42,7 +42,7 @@ def main():
         length_b = struct.pack('I', length)
         timestamp('client', 'after_serialization')
 
-        print("MNList: " + model_name_list)
+        print("MNList: " + str(model_name_list))
         print("L: " + str(task_name_length))
         print("N: " + task_name)
         print("CurM: " + cur_model)
