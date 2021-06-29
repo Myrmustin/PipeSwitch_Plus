@@ -54,9 +54,10 @@ class WorkerProc(Process):
             # last while loop for receiving complete queue trans
             
             agent, followup = self.pipe.recv()
-            print('worker_proc', 'get_followup', 'that niga made it all the way bro: ' , str(followup))
+            print('worker_proc '+ 'get_followup '+ 'that niga made it all the way bro: ' + str(followup))
 
             model_name = self.pipe.recv()
+
             model_summary = model_map[hash(model_name)]
             TERMINATE_SIGNAL[0] = 1
             timestamp('worker_proc', 'get_model')
