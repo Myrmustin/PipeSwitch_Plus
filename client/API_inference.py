@@ -47,6 +47,7 @@ def main():
         print("N: " + task_name)
         print("CurM: " + cur_model)
         print("CurD: " + cur_data)
+        print("Data: " + str(data))
         # Send Data
         client.send(task_name_length_b)
         client.send(task_name_b)
