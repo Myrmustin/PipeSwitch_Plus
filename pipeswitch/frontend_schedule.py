@@ -31,10 +31,8 @@ class FrontendScheduleThd(threading.Thread):
             agent, followup = self.qin.get()
             print('Followup at schedule: ' + str(followup))
 
-            model_name = self.qin.get()
-            print("Search agent: " + str(agent))
-            print("Search model_name:  " + str(model_name))
-            timestamp('schedule', 'get_request')
+            
+            
 
             # Get current worker
             _, _, _, term_pipe = self.worker_list[self.cur_w_idx]
@@ -47,47 +45,53 @@ class FrontendScheduleThd(threading.Thread):
             self.cur_w_idx %= len(self.worker_list)
             new_pipe, _, param_trans_pipe_parent, _ = self.worker_list[self.cur_w_idx]
 
+            # Wait for current worker to terminate
+            resp = term_pipe.recv()
+            timestamp('schedule', 'terminate_current_worker')
+
             #lets go
             new_pipe.send((agent, followup ))
             timestamp('schedule', 'send_followup')
             
+            
+            
+            model_name = self.qin.get()
+            timestamp('schedule', 'get_request')
+
             # Send request to new worker
             new_pipe.send((model_name))
             timestamp('schedule', 'notify_new_worker')
 
-            # Wait for current worker to terminate
-            resp = term_pipe.recv()
-            timestamp('schedule', 'terminate_current_worker')
+                
+            
 
             # Transfer data to GPU
             data_b = self.qin.get()
             new_pipe.send(data_b)
             timestamp('schedule', 'send_data')
 
-            followup = self.qin.get()
-            new_pipe.send(followup)
-            timestamp('schedule', 'send_followup')
 
             # Allocate cache to streams
             with torch.cuda.stream(cuda_stream_for_parameter):
                 torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
             timestamp('schedule', 'insert_cache')
-            # Transfer parameters to GPU
-            batched_parameter_list = models[hash(model_name)]
-            self._transfer_parameter(new_pipe,
+            for index in range (followup):
+                # Transfer parameters to GPU
+                batched_parameter_list = models[hash(model_name)]
+                self._transfer_parameter(new_pipe,
                                      batched_parameter_list, 
                                      cuda_stream_for_parameter,
                                      param_trans_pipe_parent)
-            timestamp('schedule', 'transfer_parameters')
+                timestamp('schedule', 'transfer_parameters for request : ' + str(index) + " (in chedule)")
 
-            # Clear status
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                torch.cuda.clear_shared_cache() # pylint: disable=no-member
-            timestamp('schedule', 'clear_status')
+                # Clear status
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.clear_shared_cache() # pylint: disable=no-member
+                timestamp('schedule', 'clear_status')
 
-            # Recv response
-            res = new_pipe.recv()
-            timestamp('schedule', 'get_response')
+                # Recv response
+                res = new_pipe.recv()
+                timestamp('schedule', 'get_response')
 
 
     def _load_model(self, model_name):

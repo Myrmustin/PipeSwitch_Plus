@@ -50,7 +50,7 @@ def main():
         print("L: " + str(task_name_length))
         print("N: " + task_name)
         print("CurM: " + cur_model)
-        print("CurD: " + cur_data)
+        
         #print("Data: " + str(data))
         # Send Data
         client.send(following_b)

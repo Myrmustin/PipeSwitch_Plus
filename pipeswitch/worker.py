@@ -47,7 +47,7 @@ class WorkerProc(Process):
         term_t.start()
         timestamp('worker', 'start_term_thd')
         # ------- terminate thread started ---------
-        
+        indexx = 0
         while True:
             # event loop get a msg then compute
             # after started forward compute
@@ -56,6 +56,7 @@ class WorkerProc(Process):
             agent, followup = self.pipe.recv()
             print('worker_proc '+ 'get_followup '+ 'that niga made it all the way bro: ' + str(followup))
 
+            
             model_name = self.pipe.recv()
 
             model_summary = model_map[hash(model_name)]
@@ -83,11 +84,13 @@ class WorkerProc(Process):
                     agent.send(b'FNSH')
             except Exception as e:
                 complete_queue.put('FNSH')
-
-            if(self.cleanup == True):
+            
+            model_summary.reset_initialized(model_summary.model)
+            indexx = indexx +1
+            if(indexx == followup):
                 # start do cleaning
                 TERMINATE_SIGNAL[0] = 0
                 timestamp('worker_comp_thd', 'complete')
 
-            model_summary.reset_initialized(model_summary.model)
+            
 
