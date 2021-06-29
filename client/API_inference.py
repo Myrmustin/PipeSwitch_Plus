@@ -68,7 +68,7 @@ def main():
         latency_list.append(latency)
         latency = (time_2 - time_1) * 1000
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
-        # time.sleep(1)
+        time.sleep(1)
 
     
 
