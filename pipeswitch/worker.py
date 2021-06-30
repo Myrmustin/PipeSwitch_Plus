@@ -43,9 +43,7 @@ class WorkerProc(Process):
         term_t.start()
         timestamp('worker', 'start_term_thd')
         # ------- terminate thread started ---------
-        index = 2
-        while True and index > 0:
-            index = index -1
+        while True :
             # event loop get a msg then compute
             # after started forward compute
             # last while loop for receiving complete queue trans
@@ -76,10 +74,9 @@ class WorkerProc(Process):
             except Exception as e:
                 complete_queue.put('FNSH')
 
-            if(index ==0):
-                # start do cleaning
-                TERMINATE_SIGNAL[0] = 0
-                timestamp('worker_comp_thd', 'complete')
-
-                model_summary.reset_initialized(model_summary.model)
+        
+            # start do cleaning
+            TERMINATE_SIGNAL[0] = 0
+            timestamp('worker_comp_thd', 'complete')
+            model_summary.reset_initialized(model_summary.model)
 
