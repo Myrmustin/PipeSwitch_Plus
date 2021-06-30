@@ -11,7 +11,6 @@ import torch.multiprocessing as mp
 
 from util.util import TcpServer, TcpAgent, timestamp
 
-models_loaded = []
 
 def func_get_request(qout):
     # Listen connections
@@ -43,15 +42,13 @@ def func_schedule(qin):
     worker_list = []
     while True:
         agent, model_name, data_b = qin.get()
-        countInfere = 0
+      
         if '_inference' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
             timestamp('INFERENCE IS STARTING', 'start')
             countInfere = countInfere +1
             active_worker.start()
-            active_worker.join()
             timestamp('INFERENCE IS DONE', 'end')
-            
             worker_list.append(active_worker)
         if '_training' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
@@ -73,18 +70,15 @@ def func_schedule(qin):
         active_worker.start()"""
 
 def worker_compute(agent, model_name, data_b):
-    models_loaded = []
     
-    if model_name not in models_loaded:
-        print('We skiped!')
-        # Load model
-        model_module = importlib.import_module('task.' + model_name)
-        model, func, _ = model_module.import_task()
-        data_loader = model_module.import_data_loader()
+    print('We skiped!')
+    # Load model
+    model_module = importlib.import_module('task.' + model_name)
+    model, func, _ = model_module.import_task()
+    data_loader = model_module.import_data_loader()
 
-        # Model to GPU
-        model = model.to('cuda')
-        models_loaded.append(model_name)
+    # Model to GPU
+    model = model.to('cuda')
 
     # Compute
     if 'training' in model_name:
@@ -102,11 +96,6 @@ def worker_compute(agent, model_name, data_b):
         agent.send(b'FNSH')
         del agent
         timestamp('server', 'reply')
-
-def do_training():
-    return None
-def do_inference():
-    return None
 
 def main():
     q_to_schedule = queue.Queue()
