@@ -52,7 +52,7 @@ def main():
 
     timestamp('**********', '**********')
     latency = (time_2 - time_1) * 1000
-    print("Inference request on machine X using model " + model_name + " (" + batch_size + " batchsize) completed for: " + latency + "ms. ")
+    print("Inference request on machine X using model " + model_name + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
         
 
 if __name__ == '__main__':
