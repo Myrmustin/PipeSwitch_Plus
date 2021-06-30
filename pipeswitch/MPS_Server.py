@@ -11,6 +11,8 @@ import torch.multiprocessing as mp
 
 from util.util import TcpServer, TcpAgent, timestamp
 
+models_loaded = []
+
 def func_get_request(qout):
     # Listen connections
     server = TcpServer('localhost', 12345)
@@ -41,10 +43,6 @@ def func_schedule(qin):
     worker_list = []
     while True:
         agent, model_name, data_b = qin.get()
-        isInference = model_name.find('_inference')
-        print('model_name: ' + model_name + ". IsInference: " + str(isInference) )
-        isTraining = model_name.find('_training')
-        print('model_name: ' + model_name + ". IsTraining: " + str(isTraining) )
         countInfere = 0
         if '_inference' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
@@ -54,13 +52,6 @@ def func_schedule(qin):
             active_worker.join()
             timestamp('INFERENCE IS DONE', 'end')
             
-            worker_list.append(active_worker)
-        if '_inference' in model_name and countInfere==1:
-            active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b, True))
-            timestamp('INFERENCE IS STARTING + counter', 'start')
-            active_worker.start()
-            if active_worker is None:
-                timestamp('INFERENCE DONE + counter', 'end')
             worker_list.append(active_worker)
         if '_training' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
@@ -81,9 +72,10 @@ def func_schedule(qin):
         active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
         active_worker.start()"""
 
-def worker_compute(agent, model_name, data_b, skip = False):
-    print( 'SKIP is = ' + str(skip))
-    if(skip==False):
+def worker_compute(agent, model_name, data_b):
+    models_loaded = []
+    
+    if model_name not in models_loaded:
         print('We skiped!')
         # Load model
         model_module = importlib.import_module('task.' + model_name)
@@ -92,6 +84,7 @@ def worker_compute(agent, model_name, data_b, skip = False):
 
         # Model to GPU
         model = model.to('cuda')
+        models_loaded.append(model_name)
 
     # Compute
     if 'training' in model_name:
