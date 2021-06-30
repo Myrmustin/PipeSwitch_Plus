@@ -58,7 +58,6 @@ def main():
         client.send(task_name_b)
         client.send(length_b)
         client.send(data_b)
-        client.send(following_b)
         timestamp('client', 'after_send')
 
         # Get reply

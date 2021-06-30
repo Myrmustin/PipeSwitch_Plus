@@ -54,7 +54,7 @@ class WorkerProc(Process):
             # last while loop for receiving complete queue trans
             
             agent, followup = self.pipe.recv()
-            print('worker_proc '+ 'get_followup '+ 'that made it all the way bro: ' + str(followup))
+            print('worker_proc '+ 'get_followup '+ 'that  made it all the way bro: ' + str(followup))
 
             
             model_name = self.pipe.recv()
@@ -86,12 +86,12 @@ class WorkerProc(Process):
             except Exception as e:
                 complete_queue.put('FNSH')
             
-            model_summary.reset_initialized(model_summary.model)
+            
             indexx = indexx +1
             if(indexx == followup):
                 # start do cleaning
                 TERMINATE_SIGNAL[0] = 0
                 timestamp('worker_comp_thd', 'complete')
-
+                model_summary.reset_initialized(model_summary.model)
             
 
