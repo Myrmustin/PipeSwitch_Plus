@@ -27,7 +27,7 @@ class FrontendScheduleThd(threading.Thread):
         index =0 
         while True:
             index = index + 1
-            print('Index is ' + str(index)) 
+            print('Index is ' + str(index) ) 
 
             # Get request
             agent, model_name = self.qin.get()
