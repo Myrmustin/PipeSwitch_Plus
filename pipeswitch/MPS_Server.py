@@ -48,6 +48,7 @@ def func_schedule(qin):
             if model_name in set:
                 print('We already have this model (skip)')
                 activeSet = set
+                print("active set (apready loaded)" + str(activeSet))
             else:
                 # Load model
                 model_module = importlib.import_module('task.' + model_name)
@@ -58,6 +59,7 @@ def func_schedule(qin):
                 model = model.to('cuda')
                 set = [agent,model_name,data_b, model, func, data_loader]
                 activeSet = set
+                print("active set (first encounter)" + str(activeSet))
                 loaded_modells.append(set)
 
 
