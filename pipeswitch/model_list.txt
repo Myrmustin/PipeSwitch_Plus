@@ -1,5 +1,17 @@
+resnet18_inference
+resnet18_training
+resnet34_inference
+resnet34_training
+resnet50_inference
+resnet50_training
+resnet101_inference
+resnet101_training
 resnet152_inference
 resnet152_training
+resnext50_32x4d_inference
+resnext50_32x4d_training
+resnext101_32x8d_inference
+resnext101_32x8d_training
 inception_v3_inference
 inception_v3_training
 bert_base_inference
