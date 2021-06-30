@@ -56,18 +56,17 @@ def main():
         timestamp('client', 'after_reply')
         time_2 = time.time()
 
-        model_name_length = 0
-        model_name_length_b = struct.pack('I', model_name_length)
-        client.send(model_name_length_b)
-        timestamp('client', 'close_training_connection')
-
         timestamp('**********', '**********')
         latency = (time_2 - time_1) * 1000
         latency_list.append(latency)
         latency = (time_2 - time_1) * 1000
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
         time.sleep(2)
-
+    
+    '''model_name_length = 0
+    model_name_length_b = struct.pack('I', model_name_length)
+    client.send(model_name_length_b)
+    timestamp('client', 'close_training_connection')'''
     
 
 if __name__ == '__main__':
