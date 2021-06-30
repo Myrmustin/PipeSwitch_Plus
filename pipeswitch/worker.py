@@ -54,7 +54,7 @@ class WorkerProc(Process):
             # last while loop for receiving complete queue trans
             
             agent, followup = self.pipe.recv()
-            print('worker_proc '+ 'get_followup '+ 'that niga made it all the way bro: ' + str(followup))
+            print('worker_proc '+ 'get_followup '+ 'that made it all the way bro: ' + str(followup))
 
             
             model_name = self.pipe.recv()
@@ -69,6 +69,7 @@ class WorkerProc(Process):
             # start doing inference
             # frontend_scheduler will directly put
             # mod_list[0] in to self.complete_queue_trans
+            
             try:
                 if 'training' in model_name:
                     self.pipe.send('FNSH')
