@@ -57,10 +57,10 @@ def func_schedule(qin):
             worker_list.append(active_worker)
         if '_inference' in model_name and countInfere==1:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b, True))
-            timestamp('INFERENCE IS STARTING', 'start')
+            timestamp('INFERENCE IS STARTING + counter', 'start')
             active_worker.start()
             if active_worker is None:
-                timestamp('INFERENCE DONE', 'end')
+                timestamp('INFERENCE DONE + counter', 'end')
             worker_list.append(active_worker)
         if '_training' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
@@ -82,7 +82,9 @@ def func_schedule(qin):
         active_worker.start()"""
 
 def worker_compute(agent, model_name, data_b, skip = False):
+    print( 'SKIP is = ' + str(skip))
     if(skip==False):
+        print('We skiped!')
         # Load model
         model_module = importlib.import_module('task.' + model_name)
         model, func, _ = model_module.import_task()
