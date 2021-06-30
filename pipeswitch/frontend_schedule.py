@@ -42,7 +42,7 @@ class FrontendScheduleThd(threading.Thread):
             # Get next worker to work on request
             self.cur_w_idx += 1
             self.cur_w_idx %= len(self.worker_list)
-            new_model_list, new_pipe, new_aram_trans_pipe, new_param_trans_pipe_parent = self.worker_list[self.cur_w_idx]
+            new_pipe = self.worker_list[self.cur_w_idx]
 
             # Send request to new worker
             new_pipe.send((agent, model_name))
