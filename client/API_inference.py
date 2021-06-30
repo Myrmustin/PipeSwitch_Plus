@@ -63,10 +63,10 @@ def main():
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
         time.sleep(2)
     
-    '''model_name_length = 0
+    model_name_length = 0
     model_name_length_b = struct.pack('I', model_name_length)
     client.send(model_name_length_b)
-    timestamp('client', 'close_training_connection')'''
+    timestamp('client', 'close_training_connection')
     
 
 if __name__ == '__main__':
