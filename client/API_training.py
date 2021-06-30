@@ -63,7 +63,7 @@ def main():
     time_2 = time.time()
 
     latency = (time_2 - time_1) * 1000
-    print("Training of " + model_nameon + " on machine X completed for: " + latency + "ms. ")
+    print("Training of " + model_name + " on machine X completed for: " + str(latency) + "ms. ")
 
 if __name__ == '__main__':
     main()
