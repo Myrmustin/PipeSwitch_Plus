@@ -45,13 +45,22 @@ def func_schedule(qin):
         print('model_name: ' + model_name + ". IsInference: " + str(isInference) )
         isTraining = model_name.find('_training')
         print('model_name: ' + model_name + ". IsTraining: " + str(isTraining) )
+        countInfere = 0
         if '_inference' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
             timestamp('INFERENCE IS STARTING', 'start')
+            countInfere = countInfere +1
             active_worker.start()
             active_worker.join()
-            timestamp('INFERENCE DONE', 'end')
+            timestamp('INFERENCE IS DONE', 'end')
             
+            worker_list.append(active_worker)
+        if '_inference' in model_name and countInfere==1:
+            active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b, True))
+            timestamp('INFERENCE IS STARTING', 'start')
+            active_worker.start()
+            if active_worker is None:
+                timestamp('INFERENCE DONE', 'end')
             worker_list.append(active_worker)
         if '_training' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
@@ -72,14 +81,15 @@ def func_schedule(qin):
         active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
         active_worker.start()"""
 
-def worker_compute(agent, model_name, data_b):
-    # Load model
-    model_module = importlib.import_module('task.' + model_name)
-    model, func, _ = model_module.import_task()
-    data_loader = model_module.import_data_loader()
+def worker_compute(agent, model_name, data_b, skip = False):
+    if(skip==False):
+        # Load model
+        model_module = importlib.import_module('task.' + model_name)
+        model, func, _ = model_module.import_task()
+        data_loader = model_module.import_data_loader()
 
-    # Model to GPU
-    model = model.to('cuda')
+        # Model to GPU
+        model = model.to('cuda')
 
     # Compute
     if 'training' in model_name:
