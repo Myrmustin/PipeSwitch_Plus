@@ -46,12 +46,12 @@ def func_schedule(qin):
         isTraining = model_name.find('_training')
         print('model_name: ' + model_name + ". IsTraining: " + str(isTraining) )
         if '_inference' in model_name:
-            active_worker = mp.Process(target=do_inference, args=(agent, model_name, data_b))
+            active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
             active_worker.start()
             print('Started a worker to do inference!' )
             worker_list.append(active_worker)
         if '_training' in model_name:
-            active_worker = mp.Process(target=do_training, args=(agent, model_name, data_b))
+            active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
             active_worker.start()
             print('Started a worker to do training!' )
             worker_list.append(active_worker)
@@ -68,6 +68,32 @@ def func_schedule(qin):
             active_worker.join()
         active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
         active_worker.start()"""
+
+def worker_compute(agent, model_name, data_b):
+    # Load model
+    model_module = importlib.import_module('task.' + model_name)
+    model, func, _ = model_module.import_task()
+    data_loader = model_module.import_data_loader()
+
+    # Model to GPU
+    model = model.to('cuda')
+
+    # Compute
+    if 'training' in model_name:
+        agent.send(b'FNSH')
+        del agent
+        timestamp('server', 'reply')
+
+        output = func(model, data_loader)
+        timestamp('server', 'complete')
+
+    else:
+        output = func(model, data_b)
+        timestamp('server', 'complete')
+
+        agent.send(b'FNSH')
+        del agent
+        timestamp('server', 'reply')
 
 def do_training():
     return None
