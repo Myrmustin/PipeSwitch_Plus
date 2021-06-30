@@ -45,17 +45,19 @@ def func_schedule(qin):
         print('model_name: ' + model_name + ". IsInference: " + str(isInference) )
         isTraining = model_name.find('_training')
         print('model_name: ' + model_name + ". IsTraining: " + str(isTraining) )
-        if(isInference):
+        if '_inference' in model_name:
             active_worker = mp.Process(target=do_inference, args=(agent, model_name, data_b))
             active_worker.start()
             print('Started a worker to do inference!' )
             worker_list.append(active_worker)
-        else:
+        if '_training' in model_name:
             active_worker = mp.Process(target=do_training, args=(agent, model_name, data_b))
             active_worker.start()
             print('Started a worker to do training!' )
             worker_list.append(active_worker)
-   
+    #for i in worker_list:
+       # i.join()
+
     
     
     """active_worker = None
