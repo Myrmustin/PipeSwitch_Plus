@@ -1,9 +1,11 @@
 ssh -i "pipeswitch" ubuntu@138.246.232.77
 conda activate tomas_env
 export PYTHONPATH=/usr/local/lib/python3.8/dist-packages/:/home/ubuntu/tomas/PipeSwitch/
+export PYTHONPATH=/usr/local/lib/python3.8/dist-packages/:/home/ubuntu/Ross/PipeSwitch_Plus/
 
 
 cd tomas/PipeSwitch/pipeswitch/
+cd Ross/PipeSwitch_Plus/pipeswitch
 python3.8 main.py model_list.txt
 
 
@@ -11,7 +13,10 @@ python3.8 main.py model_list.txt
 New terminal …. ]
 
 cd tomas/PipeSwitch/client/
+cd Ross/PipeSwitch_Plus/client
 python3.8 client_inference.py resnet152 8
-python3.8 API_inference.py resnet152 8
+python3.8 API_inference.py "resnet152;resnet152;resnet152;inception_v3;inception_v3" 8
 python3.8 API_training.py resnet152 8
 python3.8 API_PipeSwitchPlus.py modelX modelY;ModelZ;ModelY;modelY;modelX;ModelX 
+
+ps a :  shoW all processes
