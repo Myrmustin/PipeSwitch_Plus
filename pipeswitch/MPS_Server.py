@@ -41,16 +41,34 @@ def func_get_request(qout):
 def func_schedule(qin):
     worker_list = []
     while True:
+        loaded_modells = []
         agent, model_name, data_b = qin.get()
-      
+        activeSet = None
+        for set in loaded_modells:
+            if model_name in set:
+                print('We already have this model (skip)')
+                activeSet = set
+            else:
+                # Load model
+                model_module = importlib.import_module('task.' + model_name)
+                model, func, _ = model_module.import_task()
+                data_loader = model_module.import_data_loader()
+
+                # Model to GPU
+                model = model.to('cuda')
+                set = [agent,model_name,data_b, model, func, data_loader]
+                activeSet = set
+                loaded_modells.append(set)
+
+
         if '_inference' in model_name:
-            active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
+            active_worker = mp.Process(target=worker_compute, args=(activeSet[0], activeSet[1], activeSet[2], activeSet[3], activeSet[4], activeSet[5]))
             timestamp('INFERENCE IS STARTING', 'start')
             active_worker.start()
             timestamp('INFERENCE IS DONE', 'end')
             worker_list.append(active_worker)
         if '_training' in model_name:
-            active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
+            active_worker = mp.Process(target=worker_compute, args=(activeSet[0], activeSet[1], activeSet[2], activeSet[3], activeSet[4], activeSet[5]))
             active_worker.start()
             print('Started a worker to do training!' )
             worker_list.append(active_worker)
@@ -68,16 +86,7 @@ def func_schedule(qin):
         active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
         active_worker.start()"""
 
-def worker_compute(agent, model_name, data_b):
-    
-    print('We skiped!')
-    # Load model
-    model_module = importlib.import_module('task.' + model_name)
-    model, func, _ = model_module.import_task()
-    data_loader = model_module.import_data_loader()
-
-    # Model to GPU
-    model = model.to('cuda')
+def worker_compute(agent, model_name, data_b, model,func, data_loader):
 
     # Compute
     if 'training' in model_name:
