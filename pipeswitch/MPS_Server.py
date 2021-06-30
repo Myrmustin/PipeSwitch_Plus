@@ -46,7 +46,6 @@ def func_schedule(qin):
         if '_inference' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
             timestamp('INFERENCE IS STARTING', 'start')
-            countInfere = countInfere +1
             active_worker.start()
             timestamp('INFERENCE IS DONE', 'end')
             worker_list.append(active_worker)
