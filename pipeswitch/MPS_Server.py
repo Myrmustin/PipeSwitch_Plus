@@ -47,8 +47,11 @@ def func_schedule(qin):
         print('model_name: ' + model_name + ". IsTraining: " + str(isTraining) )
         if '_inference' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
+            timestamp('INFERENCE IS STARTING')
             active_worker.start()
-            print('Started a worker to do inference!' )
+            active_worker.join()
+            timestamp('INFERENCE DONE')
+            
             worker_list.append(active_worker)
         if '_training' in model_name:
             active_worker = mp.Process(target=worker_compute, args=(agent, model_name, data_b))
