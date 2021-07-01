@@ -68,7 +68,7 @@ class FrontendScheduleThd(threading.Thread):
                 timestamp('schedule', 'clear_status')
 
                 # Recv response
-                res = new_pipe.recv()
+                res = old_pipe.recv()
                 timestamp('schedule', 'get_response')
                 previous_request = model_name
             else:
@@ -114,7 +114,7 @@ class FrontendScheduleThd(threading.Thread):
                 timestamp('schedule', 'clear_status')
 
                 # Recv response
-                res = new_pipe.recv()
+                ses = new_pipe.recv()
                 previous_request = model_name
                 timestamp('schedule', 'get_response')
 
