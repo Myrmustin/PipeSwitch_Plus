@@ -71,52 +71,52 @@ class FrontendScheduleThd(threading.Thread):
                 res = new_pipe.recv()
                 timestamp('schedule', 'get_response')
                 previous_request = model_name
+            else:
+                # Get current worker
+                model_list, pipe, param_trans_pipe,term_pipe = self.worker_list[self.cur_w_idx]
+                timestamp('schedule', 'get_current_worker')
+                # Send terminate signal to current worker
+                term_pipe.send('terminate')
 
-            # Get current worker
-            model_list, pipe, param_trans_pipe,term_pipe = self.worker_list[self.cur_w_idx]
-            timestamp('schedule', 'get_current_worker')
-            # Send terminate signal to current worker
-            term_pipe.send('terminate')
+                # Get next worker to work on request
+                self.cur_w_idx += 1
+                self.cur_w_idx %= len(self.worker_list)
+                new_pipe, _, param_trans_pipe_parent, _ = self.worker_list[self.cur_w_idx]
 
-            # Get next worker to work on request
-            self.cur_w_idx += 1
-            self.cur_w_idx %= len(self.worker_list)
-            new_pipe, _, param_trans_pipe_parent, _ = self.worker_list[self.cur_w_idx]
+                # Send request to new worker
+                new_pipe.send((agent, model_name))
+                timestamp('schedule', 'notify_new_worker')
 
-            # Send request to new worker
-            new_pipe.send((agent, model_name))
-            timestamp('schedule', 'notify_new_worker')
+                # Wait for current worker to terminate
+                resp = term_pipe.recv()
+                timestamp('schedule', 'terminate_current_worker')
 
-            # Wait for current worker to terminate
-            resp = term_pipe.recv()
-            timestamp('schedule', 'terminate_current_worker')
+                # Transfer data to GPU
+                data_b = self.qin.get()
+                new_pipe.send(data_b)
+                timestamp('schedule', 'send_data')
 
-            # Transfer data to GPU
-            data_b = self.qin.get()
-            new_pipe.send(data_b)
-            timestamp('schedule', 'send_data')
-
-            # Allocate cache to streams
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
-            timestamp('schedule', 'insert_cache')
-            # Transfer parameters to GPU
-            batched_parameter_list = models[hash(model_name)]
-            self._transfer_parameter(new_pipe,
+                # Allocate cache to streams
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
+                timestamp('schedule', 'insert_cache')
+                # Transfer parameters to GPU
+                batched_parameter_list = models[hash(model_name)]
+                self._transfer_parameter(new_pipe,
                                      batched_parameter_list, 
                                      cuda_stream_for_parameter,
                                      param_trans_pipe_parent)
-            timestamp('schedule', 'transfer_parameters')
+                timestamp('schedule', 'transfer_parameters')
 
-            # Clear status
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                torch.cuda.clear_shared_cache() # pylint: disable=no-member
-            timestamp('schedule', 'clear_status')
+                # Clear status
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.clear_shared_cache() # pylint: disable=no-member
+                timestamp('schedule', 'clear_status')
 
-            # Recv response
-            res = new_pipe.recv()
-            previous_request = model_name
-            timestamp('schedule', 'get_response')
+                # Recv response
+                res = new_pipe.recv()
+                previous_request = model_name
+                timestamp('schedule', 'get_response')
 
 
     def _load_model(self, model_name):
