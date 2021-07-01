@@ -38,6 +38,7 @@ def regularSend(cur_model,batch_size):
     timestamp('client', 'before_request (regularSend)')
     type = 'regularSend'
     type_b= type.encode()
+    print("type_b BEFORE ALL: " + str(type_b))
     type_len = len(type_b)
     type_len_b = struct.pack('I', type_len)
 
