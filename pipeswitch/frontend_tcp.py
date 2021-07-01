@@ -24,6 +24,7 @@ class FrontendTcpThd(threading.Thread):
             print("Recieved model name length in bytes:" + str(model_name_length_b) )
             model_name_length = struct.unpack('I', model_name_length_b)[0]
             print("Pos 1")
+            
             if model_name_length == 0:
                 break
             model_name_b = self.agent.recv(model_name_length)
