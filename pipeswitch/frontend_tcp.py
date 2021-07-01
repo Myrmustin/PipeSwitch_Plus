@@ -21,6 +21,7 @@ class FrontendTcpThd(threading.Thread):
             print("type and type_len revieved at first point of contact!")
 
             model_name_length_b = self.agent.recv(4)
+            print("Recieved model name length in bytes:" + str(model_name_length_b) )
             model_name_length = struct.unpack('I', model_name_length_b)[0]
             print("Pos 1")
             if model_name_length == 0:
@@ -43,3 +44,7 @@ class FrontendTcpThd(threading.Thread):
             timestamp('tcp', 'get_data')
             self.qout.put(data_b)
             timestamp('tcp', 'enqueue_request')
+def regularFrontEndTcp():
+    return None
+def modifiedFrontEndTcp():
+    return None
