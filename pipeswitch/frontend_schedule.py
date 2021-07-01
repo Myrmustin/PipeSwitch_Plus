@@ -47,7 +47,7 @@ class FrontendScheduleThd(threading.Thread):
                 timestamp('schedule', 'notify_OLD_worker_on_NEW_TASK')
 
                 # Transfer data to GPU OLD WORKER
-                #data_b = self.qin.get()
+                data_b = self.qin.get()
                 #old_pipe.send(data_b)
                 #timestamp('schedule', 'send_data')
 
