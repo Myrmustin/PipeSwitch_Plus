@@ -9,12 +9,12 @@ from util.util import TcpClient, timestamp
 
 
 def main():
-model_name = sys.argv[1]
-inferencePool = sys.argv[2].split(;)   
-print(inferencePool[:])
-orderedPool = [] 
-for i in 3
-    most_common = max(inferencePool, key = inferencePool.count)
+    model_name = sys.argv[1]
+    inferencePool = sys.argv[2].split(';')   
+    print(inferencePool[:])
+    orderedPool = [] 
+    for i in 3:
+        most_common = max(inferencePool, key = inferencePool.count)
     for task in inferencePool:
         if task == most_common :
             orderedPool.append(task)
