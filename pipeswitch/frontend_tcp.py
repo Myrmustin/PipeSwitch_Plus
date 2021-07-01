@@ -13,12 +13,18 @@ class FrontendTcpThd(threading.Thread):
     def run(self):
         while True:
             timestamp('tcp', 'listening')
-            print('First point of contact is in frontend_tcp.py')
-            type_len_b =  self.agent.recv(4)   
+            #print('First point of contact is in frontend_tcp.py')
+            type_len_b =  self.agent.recv(4)
+            print("type_len_b AFTER send: " + str(type_len_b))
+   
             type_len = struct.unpack('I', type_len_b)[0]
+            print("type_len AFTER unpack: " + str(type_len))
+
             type_b = self.agent.recv(type_len)
+            print("type_b AFTER send: " + str(type_b))
+
             type = type_b.decode()
-            print("Type is : " + type)
+            print("Type AFTER decode is : " + type)
 
             model_name_length_b = self.agent.recv(4)
             print("Recieved model name length in bytes:" + str(model_name_length_b) )
