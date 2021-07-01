@@ -21,6 +21,7 @@ def main():
             previous_model = cur_model
             latency = regularSend(cur_model, batch_size)
             latency_list.append(latency)
+            continue
         
 
         if(cur_model != previous_model):
