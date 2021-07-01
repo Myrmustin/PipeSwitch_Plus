@@ -13,7 +13,10 @@ class FrontendTcpThd(threading.Thread):
     def run(self):
         while True:
             timestamp('tcp', 'listening')
-            
+            print('First point of contact is in frontend_tcp.py')
+            type_len_b =  self.agent.recv(4)   
+            type_b = struct.unpack('I', type_len_b)[0]
+            print("type and type_len revieved at first point of contact!")
             model_name_length_b = self.agent.recv(4)
             model_name_length = struct.unpack('I', model_name_length_b)[0]
             if model_name_length == 0:

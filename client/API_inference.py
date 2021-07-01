@@ -35,6 +35,10 @@ def main():
 
 def regularSend(cur_model,batch_size):
     timestamp('client', 'before_request (regularSend)')
+    type = 'regularSend'
+    type_b= type.encode()
+    type_len = len(type_b)
+    type_len_b = struct.pack('I', type_len)
 
     data = get_data(cur_model, batch_size)
         
@@ -58,7 +62,8 @@ def regularSend(cur_model,batch_size):
         
 
     # Send Data
-    
+    client.send(type_len_b)
+    client.send(type_b)
     client.send(task_name_length_b)
     client.send(task_name_b)
     client.send(length_b)
@@ -86,6 +91,10 @@ def regularSend(cur_model,batch_size):
     return latency
 def requestAwareSend(cur_model,batch_size):
     timestamp('client', 'before_request (requestAwareSend)')
+    type = 'requestAwareSend'
+    type_b= type.encode()
+    type_len = len(type_b)
+    type_len_b = struct.pack('I', type_len)
 
     data = get_data(cur_model, batch_size)
         
@@ -109,7 +118,8 @@ def requestAwareSend(cur_model,batch_size):
         
 
     # Send Data
-    
+    client.send(type_len_b)
+    client.send(type_b)
     client.send(task_name_length_b)
     client.send(task_name_b)
     client.send(length_b)
