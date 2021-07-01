@@ -65,6 +65,7 @@ def regularSend(cur_model,batch_size):
     # Send Data
     client.send(type_len_b)
     client.send(type_b)
+    print("TaskNameLen_b before send: " + str(task_name_length_b))
     client.send(task_name_length_b)
     client.send(task_name_b)
     client.send(length_b)
