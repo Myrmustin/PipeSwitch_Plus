@@ -9,6 +9,11 @@ from pipeswitch.worker_terminate import WorkerTermThd
 from util.util import timestamp
 
 class WorkerProc(Process):
+    global_model_name = ''
+    global_model_summary = ''
+    global_data = ''
+    skip = False
+    
     def __init__(self, model_list, pipe, param_trans_pipe, term_pipe):
         super(WorkerProc, self).__init__()
         self.model_list = model_list
@@ -48,33 +53,41 @@ class WorkerProc(Process):
             # after started forward compute
             # last while loop for receiving complete queue trans
             agent, model_name = self.pipe.recv()
+            #self.global_model_name = model_name
             model_summary = model_map[hash(model_name)]
             TERMINATE_SIGNAL[0] = 1
             timestamp('worker_proc', 'get_model')
 
-            data_b = self.pipe.recv()
-            timestamp('worker_proc', 'get_data')
+            if(model_name == self.global_model_name):
+                print()
+                print('We are not loading data!')
+            else:
+                None
+                data_b = self.pipe.recv()
+                self.global_model_name = model_name
+                self.global_data = data_b 
+                timestamp('worker_proc', 'get_data')
 
             # start doing inference
             # frontend_scheduler will directly put
             # mod_list[0] in to self.complete_queue_trans
             try:
-                if 'training' in model_name:
+                if 'training' in self.global_model_name:
                     self.pipe.send('FNSH')
                     agent.send(b'FNSH')
                 
                 with torch.cuda.stream(model_summary.cuda_stream_for_computation):
-                    output = model_summary.execute(data_b)
+                    output = model_summary.execute(self.global_data)
                     print ('Get output', output)
                     del output
 
-                if 'inference' in model_name:
+                if 'inference' in self.global_model_name:
                     self.pipe.send('FNSH')
                     agent.send(b'FNSH')
             except Exception as e:
                 complete_queue.put('FNSH')
 
-        
+            self.global_model_name = model_name
             # start do cleaning
             TERMINATE_SIGNAL[0] = 0
             timestamp('worker_comp_thd', 'complete')
