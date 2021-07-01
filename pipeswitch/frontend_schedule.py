@@ -25,11 +25,12 @@ class FrontendScheduleThd(threading.Thread):
         cuda_stream_for_parameter = torch.cuda.Stream()
         timestamp('schedule', 'create_stream')
         index =0 
+        previous_request=''
         while True:
             index = index + 1
             print('Index is ' + str(index) ) 
 
-            previous_request=''
+            
             # Get request
             agent, model_name = self.qin.get()
             timestamp('schedule', 'get_request')
@@ -69,6 +70,7 @@ class FrontendScheduleThd(threading.Thread):
                 # Recv response
                 res = new_pipe.recv()
                 timestamp('schedule', 'get_response')
+                previous_request = model_name
 
             # Get current worker
             model_list, pipe, param_trans_pipe,term_pipe = self.worker_list[self.cur_w_idx]
@@ -113,6 +115,7 @@ class FrontendScheduleThd(threading.Thread):
 
             # Recv response
             res = new_pipe.recv()
+            previous_request = model_name
             timestamp('schedule', 'get_response')
 
 
