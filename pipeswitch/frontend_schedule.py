@@ -48,7 +48,7 @@ class FrontendScheduleThd(threading.Thread):
 
                 # Transfer data to GPU OLD WORKER
                 data_b = self.qin.get()
-                #old_pipe.send(data_b)
+                old_pipe.send(data_b)
                 #timestamp('schedule', 'send_data')
 
                 # Allocate cache to streams
