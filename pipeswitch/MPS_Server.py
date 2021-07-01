@@ -44,6 +44,19 @@ def func_schedule(qin):
         loaded_modells = []
         agent, model_name, data_b = qin.get()
         activeSet = None
+        if len(loaded_modells) == 0: 
+            # Load model
+            model_module = importlib.import_module('task.' + model_name)
+            model, func, _ = model_module.import_task()
+            data_loader = model_module.import_data_loader()
+
+            # Model to GPU
+            model = model.to('cuda')
+            set = [agent,model_name,data_b, model, func, data_loader]
+            activeSet = set
+            print("active set (first encounter)" + str(activeSet))
+            loaded_modells.append(set)
+            
         for set in loaded_modells:
             if model_name in set:
                 print('We already have this model (skip)')
