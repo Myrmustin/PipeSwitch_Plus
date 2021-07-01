@@ -7,6 +7,7 @@ export PYTHONPATH=/usr/local/lib/python3.8/dist-packages/:/home/ubuntu/Ross/Pipe
 cd tomas/PipeSwitch/pipeswitch/
 cd Ross/PipeSwitch_Plus/pipeswitch
 python3.8 main.py model_list.txt
+python3.8 MPS_Server.py
 
 
 
@@ -17,6 +18,8 @@ cd Ross/PipeSwitch_Plus/client
 python3.8 client_inference.py resnet152 8
 python3.8 API_inference.py "resnet152;resnet152;resnet152;inception_v3;inception_v3" 8
 python3.8 API_training.py resnet152 8
+python3.8 API_inference.py resnet152 8
+
 python3.8 API_PipeSwitchPlus.py modelX modelY;ModelZ;ModelY;modelY;modelX;ModelX 
 
 ps a :  shoW all processes

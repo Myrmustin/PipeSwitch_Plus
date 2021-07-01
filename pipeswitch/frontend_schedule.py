@@ -29,9 +29,46 @@ class FrontendScheduleThd(threading.Thread):
             index = index + 1
             print('Index is ' + str(index) ) 
 
+            previous_request=''
             # Get request
             agent, model_name = self.qin.get()
             timestamp('schedule', 'get_request')
+            print('Previous worker was on task: ' + previous_request + '. Curent request is: ' + model_name)
+            if(previous_request == model_name):
+                timestamp('schedule', 'REUSING WORKER')
+                # Get current worker
+                old_pipe, _, param_trans_pipe_parent,term_pipe = self.worker_list[self.cur_w_idx]
+                timestamp('schedule', 'get_current_worker')
+                # DONT Send terminate signal to current worker
+                # DONT Get next worker to work on request
+                # Send request to OLD worker
+                old_pipe.send((agent, model_name))
+                timestamp('schedule', 'notify_OLD_worker_on_NEW_TASK')
+
+                # Transfer data to GPU OLD WORKER
+                data_b = self.qin.get()
+                old_pipe.send(data_b)
+                timestamp('schedule', 'send_data')
+
+                # Allocate cache to streams
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
+                timestamp('schedule', 'insert_cache')
+                # Transfer parameters to GPU
+                batched_parameter_list = models[hash(model_name)]
+                self._transfer_parameter(old_pipe,
+                                     batched_parameter_list, 
+                                     cuda_stream_for_parameter,
+                                     param_trans_pipe_parent)
+                timestamp('schedule', 'transfer_parameters')
+                # Clear status
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.clear_shared_cache() # pylint: disable=no-member
+                timestamp('schedule', 'clear_status')
+
+                # Recv response
+                res = new_pipe.recv()
+                timestamp('schedule', 'get_response')
 
             # Get current worker
             model_list, pipe, param_trans_pipe,term_pipe = self.worker_list[self.cur_w_idx]
