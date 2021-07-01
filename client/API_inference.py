@@ -18,10 +18,12 @@ def main():
     dummy = True
     for cur_model in model_name_list:
         if(dummy):
-            regularSend(cur_model, batch_size)
+            latency = regularSend(cur_model, batch_size)
+            latency_list.append(latency)
             dummy = False
         else:
-            requestAwareSend(cur_model,batch_size)
+            latency = requestAwareSend(cur_model,batch_size)
+            latency_list.append(latency)
             dummy = True        
     print("Latency for all requests: " + str(latency_list))
 
@@ -73,11 +75,11 @@ def regularSend(cur_model,batch_size):
         
     timestamp('**********', '**********')
     latency = (time_2 - time_1) * 1000
-    latency_list.append(latency)
     print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
     #time.sleep(2)
-
-def requestAwareSend():
+    return latency
+    
+def requestAwareSend(cur_model,batch_size):
     timestamp('client', 'before_request (requestAwareSend)')
 
     data = get_data(cur_model, batch_size)
@@ -125,9 +127,9 @@ def requestAwareSend():
         
     timestamp('**********', '**********')
     latency = (time_2 - time_1) * 1000
-    latency_list.append(latency)
     print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
     #time.sleep(2)
+    return latency
 
 if __name__ == '__main__':
     main()
