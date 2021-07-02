@@ -73,7 +73,7 @@ class FrontendScheduleThd(threading.Thread):
                                      cuda_stream_for_parameter,
                                      param_trans_pipe_parent)
                 timestamp('schedule', 'transfer_parameters')
-                NotStop = False
+                #NotStop = False
 
             # Clear status
             with torch.cuda.stream(cuda_stream_for_parameter):
