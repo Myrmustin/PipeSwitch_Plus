@@ -72,6 +72,7 @@ class FrontendScheduleThd(threading.Thread):
                                      batched_parameter_list, 
                                      cuda_stream_for_parameter,
                                      param_trans_pipe_parent, NotStop)
+            print("This is the batched_parameter_list: " + str(batched_parameter_list))
             timestamp('schedule', 'transfer_parameters')
             # Clear status
             with torch.cuda.stream(cuda_stream_for_parameter):
