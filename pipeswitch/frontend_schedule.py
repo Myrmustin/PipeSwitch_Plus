@@ -65,11 +65,11 @@ class FrontendScheduleThd(threading.Thread):
                 param_trans_pipe.send(mod_list[0])
 
     def regularFrontendScheduler(self, models, cuda_stream_for_parameter):
-        print('regularFrontendScheduler() runing!')
+        
         # Get request
         agent, model_name = self.qin.get()
         timestamp('schedule', 'get_request')
-
+        print('regularFrontendScheduler() runing!')
         # Get current worker
         _, _, _, term_pipe = self.worker_list[self.cur_w_idx]
         timestamp('schedule', 'get_current_worker')
