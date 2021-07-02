@@ -36,9 +36,26 @@ def import_data(batch_size):
     return images, target
 
 def import_model():
-    model = torch.hub.load('pytorch/vision:v0.4.2',
-                           MODEL_NAME,
-                           pretrained=True)
+    if not os.path.exists('./saved_models'):
+        os.mkdir('./saved_models')
+
+    if os.path.exists('./saved_models/' + MODEL_NAME + '.pth.tar'):
+        print('Loading local model.')
+
+        model = torch.hub.load('pytorch/vision:v0.4.2',
+                            MODEL_NAME,
+                            pretrained=False)
+
+        checkpoint = torch.load('./saved_models/' + MODEL_NAME + '.pth.tar')
+        model.load_state_dict(checkpoint['state_dict'])
+
+    else:
+        print('Loading from torch hub.')
+
+        model = torch.hub.load('pytorch/vision:v0.4.2',
+                            MODEL_NAME,
+                            pretrained=True)
+
     util.set_fullname(model, MODEL_NAME)
 
     return model

@@ -45,6 +45,11 @@ def import_func():
             optimizer.step()
 
             print ('Training', i, time.time(), loss.item())
+
+            if i % 10 == 0:
+                torch.save({'state_dict': model.state_dict()}, './saved_models/' + TASK_NAME.split('_')[0] + '.pth.tar')
+                print('Model saved')
+
             del images_cuda
             del target_cuda
         
