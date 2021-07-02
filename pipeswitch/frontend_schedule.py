@@ -24,12 +24,15 @@ class FrontendScheduleThd(threading.Thread):
         # Create CUDA stream
         cuda_stream_for_parameter = torch.cuda.Stream()
         timestamp('schedule', 'create_stream')
-
+        NotStop = True
         while True:
             
             # Get request
             agent, model_name = self.qin.get()
             timestamp('schedule', 'get_request')
+
+            #search foir worker that has coresponding model
+            # recieve a parameter who was the last worker
 
             # Get current worker
             _, _, _, term_pipe = self.worker_list[self.cur_w_idx]
@@ -56,18 +59,21 @@ class FrontendScheduleThd(threading.Thread):
             data_b = self.qin.get()
             new_pipe.send(data_b)
             timestamp('schedule', 'send_data')
-
-            # Allocate cache to streams
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
-            timestamp('schedule', 'insert_cache')
-            # Transfer parameters to GPU
-            batched_parameter_list = models[hash(model_name)]
-            self._transfer_parameter(new_pipe,
+            
+            if(NotStop):
+                
+                # Allocate cache to streams
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
+                timestamp('schedule', 'insert_cache')
+                # Transfer parameters to GPU
+                batched_parameter_list = models[hash(model_name)]
+                self._transfer_parameter(new_pipe,
                                      batched_parameter_list, 
                                      cuda_stream_for_parameter,
                                      param_trans_pipe_parent)
-            timestamp('schedule', 'transfer_parameters')
+                timestamp('schedule', 'transfer_parameters')
+                NotStop = False
 
             # Clear status
             with torch.cuda.stream(cuda_stream_for_parameter):

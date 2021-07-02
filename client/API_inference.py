@@ -90,6 +90,8 @@ def requestAwareSend(cur_model,batch_size):
     time_1 = time.time()
 
     # Serialize data
+    indicator = "multiple"
+    # add indicator? 
     task_name = cur_model + '_inference'
     task_name_b = task_name.encode()
     task_name_length = len(task_name_b)
@@ -113,6 +115,8 @@ def requestAwareSend(cur_model,batch_size):
 
     # Get reply
     reply_b = client.recv(4)
+    if(reply_b == "FNSH"):
+        print("Reply is FNSH!")
     reply = reply_b.decode()
     if reply == 'FAIL':
         timestamp('client', 'FAIL')
@@ -133,3 +137,4 @@ def requestAwareSend(cur_model,batch_size):
 
 if __name__ == '__main__':
     main()
+

@@ -23,7 +23,12 @@ def main():
     torch.randn(1024, device='cuda')
     torch.cuda.allocate_shared_cache()
 
+
+    # check request create N workers
+    # send model name imnstead of list    
+
     # Create workers
+    # for every model create 2 workers
     num_workers = 2
     worker_list = []
     for _ in range(num_workers):
