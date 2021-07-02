@@ -30,7 +30,7 @@ class FrontendScheduleThd(threading.Thread):
         while True:
             #---------------------Take Type -----------
             #------------------------------------
-            #self.regularFrontendScheduler(models, cuda_stream_for_parameter)
+            self.regularFrontendScheduler(models, cuda_stream_for_parameter)
             
             """# Get request
             agent, model_name = self.qin.get()
