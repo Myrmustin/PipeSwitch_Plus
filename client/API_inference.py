@@ -50,7 +50,7 @@ def regularSend(cur_model,batch_size):
     task_name_length = len(task_name_b)
     task_name_length_b = struct.pack('I', task_name_length)
     data_b = data.numpy().tobytes()
-    print("Data sent from client(to Bytes): " + str(data.numpy().tobytes()))
+    print("Data sent from client(before we serialize it): " + str(data.numpy()))
     length = len(data_b)
     length_b = struct.pack('I', length)
     timestamp('client', 'after_serialization')
