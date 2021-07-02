@@ -25,13 +25,47 @@ class FrontendScheduleThd(threading.Thread):
         # Create CUDA stream
         cuda_stream_for_parameter = torch.cuda.Stream()
         timestamp('schedule', 'create_stream')
-
+        
         while True:
             #---------------------Take Type -----------
             #------------------------------------
-            regularFrontendScheduler(self,models, cuda_stream_for_parameter)
+            self.regularFrontendScheduler(models, cuda_stream_for_parameter)
+        print('asdasd')
+        
+    
+
+    def _load_model(self, model_name):
+        # Import parameters
+        model_module = importlib.import_module('task.' + model_name)
+        batched_parameter_list = model_module.import_parameters()
+
+        # Preprocess batches
+        processed_batched_parameter_list = []
+        for param, mod_list in batched_parameter_list:
+            if param is None:
+                processed_batched_parameter_list.append((None, mod_list))
+            else:
+                processed_batched_parameter_list.append((param.pin_memory(), mod_list))
+
+        return processed_batched_parameter_list
+
+    def _transfer_parameter(self, pipe, 
+                            batched_parameter_list, 
+                            cuda_stream_for_parameter,
+                            param_trans_pipe):
+        param_cuda_list = []
+        for param, mod_list in batched_parameter_list:
+            with torch.cuda.stream(cuda_stream_for_parameter):
+                if param is not None:
+                    param_cuda = param.cuda(non_blocking=True)
+                    param_cuda_list.append(param_cuda)
+                    e = torch.cuda.Event()
+                    e.record()
+                    e.synchronize()
+                param_trans_pipe.send(mod_list[0])
 
     def regularFrontendScheduler(self, models, cuda_stream_for_parameter):
+        print('regularFrontendScheduler() runing!')
         # Get request
         agent, model_name = self.qin.get()
         timestamp('schedule', 'get_request')
@@ -82,33 +116,3 @@ class FrontendScheduleThd(threading.Thread):
         # Recv response
         res = new_pipe.recv()
         timestamp('schedule', 'get_response')
-
-    def _load_model(self, model_name):
-        # Import parameters
-        model_module = importlib.import_module('task.' + model_name)
-        batched_parameter_list = model_module.import_parameters()
-
-        # Preprocess batches
-        processed_batched_parameter_list = []
-        for param, mod_list in batched_parameter_list:
-            if param is None:
-                processed_batched_parameter_list.append((None, mod_list))
-            else:
-                processed_batched_parameter_list.append((param.pin_memory(), mod_list))
-
-        return processed_batched_parameter_list
-
-    def _transfer_parameter(self, pipe, 
-                            batched_parameter_list, 
-                            cuda_stream_for_parameter,
-                            param_trans_pipe):
-        param_cuda_list = []
-        for param, mod_list in batched_parameter_list:
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                if param is not None:
-                    param_cuda = param.cuda(non_blocking=True)
-                    param_cuda_list.append(param_cuda)
-                    e = torch.cuda.Event()
-                    e.record()
-                    e.synchronize()
-                param_trans_pipe.send(mod_list[0])
