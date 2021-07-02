@@ -73,12 +73,13 @@ class FrontendScheduleThd(threading.Thread):
                                      cuda_stream_for_parameter,
                                      param_trans_pipe_parent)
                 timestamp('schedule', 'transfer_parameters')
-                #NotStop = False
+                # Clear status
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    torch.cuda.clear_shared_cache() # pylint: disable=no-member
+                timestamp('schedule', 'clear_status')
+                NotStop = False
 
-            # Clear status
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                torch.cuda.clear_shared_cache() # pylint: disable=no-member
-            timestamp('schedule', 'clear_status')
+            
 
             # Recv response
             res = new_pipe.recv()
