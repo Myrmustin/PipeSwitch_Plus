@@ -60,24 +60,24 @@ class FrontendScheduleThd(threading.Thread):
             new_pipe.send(data_b)
             timestamp('schedule', 'send_data')
             
-            if(NotStop):
+            
                 
-                # Allocate cache to streams
-                with torch.cuda.stream(cuda_stream_for_parameter):
-                    torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
-                timestamp('schedule', 'insert_cache')
-                # Transfer parameters to GPU
-                batched_parameter_list = models[hash(model_name)]
-                self._transfer_parameter(new_pipe,
+            # Allocate cache to streams
+            with torch.cuda.stream(cuda_stream_for_parameter):
+                torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
+            timestamp('schedule', 'insert_cache')
+            # Transfer parameters to GPU
+            batched_parameter_list = models[hash(model_name)]
+            self._transfer_parameter(new_pipe,
                                      batched_parameter_list, 
                                      cuda_stream_for_parameter,
-                                     param_trans_pipe_parent)
-                timestamp('schedule', 'transfer_parameters')
-                # Clear status
-                with torch.cuda.stream(cuda_stream_for_parameter):
-                    torch.cuda.clear_shared_cache() # pylint: disable=no-member
-                timestamp('schedule', 'clear_status')
-                NotStop = False
+                                     param_trans_pipe_parent, NotStop)
+            timestamp('schedule', 'transfer_parameters')
+            # Clear status
+            with torch.cuda.stream(cuda_stream_for_parameter):
+                torch.cuda.clear_shared_cache() # pylint: disable=no-member
+            timestamp('schedule', 'clear_status')
+            NotStop = False
 
             
 
@@ -104,14 +104,17 @@ class FrontendScheduleThd(threading.Thread):
     def _transfer_parameter(self, pipe, 
                             batched_parameter_list, 
                             cuda_stream_for_parameter,
-                            param_trans_pipe):
+                            param_trans_pipe, NotStop = False):
         param_cuda_list = []
         for param, mod_list in batched_parameter_list:
-            with torch.cuda.stream(cuda_stream_for_parameter):
-                if param is not None:
-                    param_cuda = param.cuda(non_blocking=True)
-                    param_cuda_list.append(param_cuda)
-                    e = torch.cuda.Event()
-                    e.record()
-                    e.synchronize()
-                param_trans_pipe.send(mod_list[0])
+            if(NotStop):
+                with torch.cuda.stream(cuda_stream_for_parameter):
+                    if param is not None:
+                        param_cuda = param.cuda(non_blocking=True)
+                        param_cuda_list.append(param_cuda)
+                        e = torch.cuda.Event()
+                        e.record()
+                        e.synchronize()
+                    param_trans_pipe.send(mod_list[0])
+            else:
+                param_trans_pipe.send(mod_list[0])   
