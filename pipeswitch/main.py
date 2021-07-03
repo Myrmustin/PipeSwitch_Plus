@@ -29,7 +29,7 @@ def main():
 
     # Create workers
     # for every model create 2 workers
-    num_workers = 1
+    num_workers = 2
     worker_list = []
     for _ in range(num_workers):
         p_parent, p_child = mp.Pipe()

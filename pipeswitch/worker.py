@@ -80,6 +80,6 @@ class WorkerProc(Process):
             # start do cleaning
             TERMINATE_SIGNAL[0] = 0
             timestamp('worker_comp_thd', 'complete')
-
-            model_summary.reset_initialized(model_summary.model)
+            
+            #model_summary.reset_initialized(model_summary.model)
 
