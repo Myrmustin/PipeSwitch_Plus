@@ -62,12 +62,13 @@ class FrontendScheduleThd(threading.Thread):
                 torch.cuda.insert_shared_cache_for_parameter() # pylint: disable=no-member
             timestamp('schedule', 'insert_cache')
             # Transfer parameters to GPU
-            batched_parameter_list = models[hash(model_name)]
-            self._transfer_parameter(new_pipe,
-                                     batched_parameter_list, 
-                                     cuda_stream_for_parameter,
-                                     param_trans_pipe_parent)
-            timestamp('schedule', 'transfer_parameters')
+            for ind in range(3):    
+                batched_parameter_list = models[hash(model_name)]
+                self._transfer_parameter(new_pipe,
+                                        batched_parameter_list, 
+                                        cuda_stream_for_parameter,
+                                        param_trans_pipe_parent)
+                timestamp('schedule', 'transfer_parameters')
 
             # Clear status
             with torch.cuda.stream(cuda_stream_for_parameter):
