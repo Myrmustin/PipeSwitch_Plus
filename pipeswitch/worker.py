@@ -56,13 +56,14 @@ class WorkerProc(Process):
             timestamp('worker_proc', 'get_model')
 
             data_b = self.pipe.recv()
-            data_b_1 = get_data(model_name, 8).numpy().tobytes()
-            data_b_2 = get_data(model_name, 8).numpy().tobytes()
-
+            data_1 = get_data(model_name, 8)
+            data_2 = get_data(model_name, 8)
+            data_1_b = data_1.numpy().tobytes()
+            data_2_b = data_2.numpy().tobytes()
             datas = []
             datas.append(data_b)
-            datas.append(data_b_1)
-            datas.append(data_b_2)
+            datas.append(data_1_b)
+            datas.append(data_2_b)
             timestamp('worker_proc', 'get_data')
 
             # start doing inference
@@ -74,12 +75,14 @@ class WorkerProc(Process):
                     agent.send(b'FNSH')
                 
                 for ind in datas:
+                    timestamp('worker', 'STARTING INFERENCE BABY')
                     print("----------Execute number " + str(ind) + ' ---------')
                     with torch.cuda.stream(model_summary.cuda_stream_for_computation):
                         output = model_summary.execute(ind)
                         print ('----------Get output: ', output)
                         del output
-                        #model_summary.reset_initialized(model_summary.model)
+                    #model_summary.reset_initialized(model_summary.model)
+                    timestamp('worker', 'ENDING INFERENCE BABY')
 
                 if 'inference' in model_name:
                     self.pipe.send('FNSH')
