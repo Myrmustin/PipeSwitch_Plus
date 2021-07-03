@@ -82,4 +82,3 @@ class WorkerProc(Process):
             timestamp('worker_comp_thd', 'complete')
 
             model_summary.reset_initialized(model_summary.model)
-

@@ -15,10 +15,10 @@ def main():
     orderedPool = [] 
     for i in 3:
         most_common = max(inferencePool, key = inferencePool.count)
-        for task in inferencePool:
-            if task == most_common :
-                orderedPool.append(task)
-                inferencePool.remove(task)
+    for task in inferencePool:
+        if task == most_common :
+            orderedPool.append(task)
+            inferencePool.remove(task)
 
     print(orderedPool)
     
