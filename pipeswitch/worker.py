@@ -76,7 +76,7 @@ class WorkerProc(Process):
                 
                 for ind in datas:
                     timestamp('worker', 'STARTING INFERENCE BABY')
-                    print("----------Execute number " + str(ind) + ' ---------')
+                    print("----------Execute number---------")
                     with torch.cuda.stream(model_summary.cuda_stream_for_computation):
                         output = model_summary.execute(ind)
                         print ('----------Get output: ', output)
