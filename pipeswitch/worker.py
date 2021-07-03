@@ -65,10 +65,13 @@ class WorkerProc(Process):
                     self.pipe.send('FNSH')
                     agent.send(b'FNSH')
                 
-                with torch.cuda.stream(model_summary.cuda_stream_for_computation):
-                    output = model_summary.execute(data_b)
-                    print ('Get output', output)
-                    del output
+                for ind in range (3):
+                    print("----------Execute number " + str(ind) + ' ---------')
+                    with torch.cuda.stream(model_summary.cuda_stream_for_computation):
+                        output = model_summary.execute(data_b)
+                        print ('Get output', output)
+                        del output
+                        model_summary.reset_initialized(model_summary.model)
 
                 if 'inference' in model_name:
                     self.pipe.send('FNSH')
@@ -81,4 +84,4 @@ class WorkerProc(Process):
             TERMINATE_SIGNAL[0] = 0
             timestamp('worker_comp_thd', 'complete')
 
-            model_summary.reset_initialized(model_summary.model)
+            
