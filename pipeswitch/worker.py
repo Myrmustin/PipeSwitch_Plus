@@ -1,6 +1,6 @@
 from queue import Queue
 from multiprocessing import Process
-
+import numpy
 import torch
 import time
 from task.helper import get_data
@@ -54,10 +54,10 @@ class WorkerProc(Process):
             model_summary = model_map[hash(model_name)]
             TERMINATE_SIGNAL[0] = 1
             timestamp('worker_proc', 'get_model')
-
+            model_name_p = model_name.replace('_inference','')
             data_b = self.pipe.recv()
-            data_1 = get_data(model_name, 8)
-            data_2 = get_data(model_name, 8)
+            data_1 = get_data(model_name_p, 8)
+            data_2 = get_data(model_name_p, 8)
             data_1_b = data_1.numpy().tobytes()
             data_2_b = data_2.numpy().tobytes()
             datas = []
