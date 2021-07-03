@@ -121,7 +121,7 @@ def regularFrontendScheduler(self, models, cuda_stream_for_parameter):
     # Get request
     agent, type = self.qin.get()
     timestamp('schedule', 'got_type')
-    print('Got type in frontEndScheduler' + str(type))
+    print('Got type in frontEndScheduler' + type)
     model_name = self.qin.get()
     timestamp('schedule', 'get_request')
     print('Got model_name in frontEndScheduler' + str(model_name))
