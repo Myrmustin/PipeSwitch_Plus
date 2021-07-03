@@ -43,7 +43,7 @@ def main():
 
 
     with open('/home/ubuntu/Ross/PipeSwitch_Plus/pipeswitch/savedData.p', 'wb') as f:
-        pickle.dump(data_list, f)
+        pickle.dump(data_list_b, f)
 
     data_b = data_list_b[0]
     length = len(data_b)

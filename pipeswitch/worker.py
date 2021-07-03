@@ -3,6 +3,7 @@ from multiprocessing import Process
 import numpy
 import torch
 import time
+import pickle
 from task.helper import get_data
 
 from pipeswitch.worker_common import ModelSummary
@@ -58,7 +59,8 @@ class WorkerProc(Process):
             data_b = self.pipe.recv()
            
             datas = []
-            datas.append(data_b)
+            datas = pickle.load( open( "savedData.p", "rb" ) )
+
             timestamp('worker_proc', 'get_data')
 
             
@@ -70,9 +72,9 @@ class WorkerProc(Process):
                 if 'training' in model_name:
                     self.pipe.send('FNSH')
                     agent.send(b'FNSH')
-                
+                index = 0;
                 for ind in datas:
-                    timestamp('worker', 'STARTING INFERENCE BABY')
+                    timestamp('worker', str('STARTING INFERENCE BABY ' + str(index)))
                     print("----------Execute number---------")
                     with torch.cuda.stream(model_summary.cuda_stream_for_computation):
                         output = model_summary.execute(ind)
