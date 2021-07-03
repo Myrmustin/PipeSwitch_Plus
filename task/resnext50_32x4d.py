@@ -4,7 +4,7 @@ import torch
 
 import task.common as util
 
-MODEL_NAME = 'resnet152'
+MODEL_NAME = 'resnext50_32x4d'
 
 def import_data(batch_size):
     filename = 'dog.jpg'

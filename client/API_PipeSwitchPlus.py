@@ -20,7 +20,7 @@ def main():
             orderedPool.append(task)
             inferencePool.remove(task)
 
-print(orderedPool)
+    print(orderedPool)
     
 
 if __name__ == '__main__':

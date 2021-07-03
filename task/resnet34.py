@@ -4,7 +4,7 @@ import torch
 
 import task.common as util
 
-MODEL_NAME = 'resnet152'
+MODEL_NAME = 'resnet34'
 
 def import_data(batch_size):
     filename = 'dog.jpg'
@@ -55,7 +55,7 @@ def import_model():
         model = torch.hub.load('pytorch/vision:v0.4.2',
                             MODEL_NAME,
                             pretrained=True)
-
+                            
     util.set_fullname(model, MODEL_NAME)
 
     return model

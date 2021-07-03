@@ -3,16 +3,16 @@ import time
 import torch
 import torch.nn as nn
 
-import task.resnet152 as resnet152
+import task.resnet34 as resnet34
 import task.common as util
 
-TASK_NAME = 'resnet152_training'
+TASK_NAME = 'resnet34_training'
 
 def import_data_loader():
-    return resnet152.import_data
+    return resnet34.import_data
 
 def import_model():
-    model = resnet152.import_model()
+    model = resnet34.import_model()
     model.train()
     return model
 
@@ -59,12 +59,12 @@ def import_func():
 def import_task():
     model = import_model()
     func = import_func()
-    group_list = resnet152.partition_model(model)
+    group_list = resnet34.partition_model(model)
     shape_list = [util.group_to_shape(group) for group in group_list]
     return model, func, shape_list
 
 def import_parameters():
     model = import_model()
-    group_list = resnet152.partition_model(model)
+    group_list = resnet34.partition_model(model)
     batch_list = [util.group_to_batch(group) for group in group_list]
     return batch_list
