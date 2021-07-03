@@ -52,6 +52,7 @@ class WorkerProc(Process):
             # after started forward compute
             # last while loop for receiving complete queue trans
             agent, model_name = self.pipe.recv()
+            print("Model name is: ---------- " + model_name)
             model_summary = model_map[hash(model_name)]
             TERMINATE_SIGNAL[0] = 1
             timestamp('worker_proc', 'get_model')
