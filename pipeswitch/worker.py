@@ -9,10 +9,6 @@ from pipeswitch.worker_terminate import WorkerTermThd
 from util.util import timestamp
 
 class WorkerProc(Process):
-    global_model_name = ''
-    global_model_summary = ''
-    global_data = ''
-    skip = False
     
     def __init__(self, model_list, pipe, param_trans_pipe, term_pipe):
         super(WorkerProc, self).__init__()
@@ -57,16 +53,9 @@ class WorkerProc(Process):
             model_summary = model_map[hash(model_name)]
             TERMINATE_SIGNAL[0] = 1
             timestamp('worker_proc', 'get_model')
-
-            if(model_name == self.global_model_name):
-                print()
-                print('We are not loading data!')
-            else:
-                None
-                data_b = self.pipe.recv()
-                self.global_model_name = model_name
-                self.global_data = data_b 
-                timestamp('worker_proc', 'get_data')
+                
+            data_b = self.pipe.recv()
+            timestamp('worker_proc', 'get_data')
 
             # start doing inference
             # frontend_scheduler will directly put
