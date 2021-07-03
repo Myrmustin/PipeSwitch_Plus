@@ -43,8 +43,9 @@ class WorkerProc(Process):
         term_t.start()
         timestamp('worker', 'start_term_thd')
         # ------- terminate thread started ---------
-
-        while True:
+        
+        while True :
+            
             # event loop get a msg then compute
             # after started forward compute
             # last while loop for receiving complete queue trans
@@ -75,6 +76,7 @@ class WorkerProc(Process):
             except Exception as e:
                 complete_queue.put('FNSH')
 
+           
             # start do cleaning
             TERMINATE_SIGNAL[0] = 0
             timestamp('worker_comp_thd', 'complete')

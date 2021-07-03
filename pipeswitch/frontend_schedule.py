@@ -26,6 +26,7 @@ class FrontendScheduleThd(threading.Thread):
         timestamp('schedule', 'create_stream')
 
         while True:
+            
             # Get request
             agent, model_name = self.qin.get()
             timestamp('schedule', 'get_request')
@@ -33,6 +34,8 @@ class FrontendScheduleThd(threading.Thread):
             # Get current worker
             _, _, _, term_pipe = self.worker_list[self.cur_w_idx]
             timestamp('schedule', 'get_current_worker')
+            
+            
             # Send terminate signal to current worker
             term_pipe.send('terminate')
 
