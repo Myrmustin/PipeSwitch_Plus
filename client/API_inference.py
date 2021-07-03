@@ -3,6 +3,7 @@ import time
 import struct
 import statistics
 import pickle
+import os
 from pathlib import Path
 
 from task.helper import get_data
@@ -41,7 +42,7 @@ def main():
         data_list_b.append(data_b)
 
 
-    with open('/home/ubuntu/Ross/PipeSwitch_Plus/pipeswitch', 'wb') as f:
+    with open('/home/ubuntu/Ross/PipeSwitch_Plus/pipeswitch/savedData.p', 'wb') as f:
         pickle.dump(data_list, f)
 
     data_b = data_list_b[0]
