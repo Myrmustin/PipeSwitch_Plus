@@ -71,7 +71,7 @@ class WorkerProc(Process):
                         output = model_summary.execute(data_b)
                         print ('Get output', output)
                         del output
-                        model_summary.reset_initialized(model_summary.model)
+                        #model_summary.reset_initialized(model_summary.model)
 
                 if 'inference' in model_name:
                     self.pipe.send('FNSH')
