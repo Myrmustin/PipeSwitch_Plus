@@ -120,11 +120,13 @@ def regularFrontendScheduler(self, models, cuda_stream_for_parameter):
         
     # Get request
     agent, type = self.qin.get()
-    timestamp('schedule', 'Got type in frontEndScheduler' + str(type))
+    timestamp('schedule', 'got_type')
+    print('Got type in frontEndScheduler' + str(type))
     model_name = self.qin.get()
     timestamp('schedule', 'get_request')
+    print('Got model_name in frontEndScheduler' + str(model_name))
 
-    print('regularFrontendScheduler() runing!')
+    
     # Get current worker
     _, _, _, term_pipe = self.worker_list[self.cur_w_idx]
     timestamp('schedule', 'get_current_worker')
@@ -148,6 +150,7 @@ def regularFrontendScheduler(self, models, cuda_stream_for_parameter):
 
     # Transfer data to GPU
     data_b = self.qin.get()
+    print('Got DATA in frontEndScheduler')
     new_pipe.send(data_b)
     timestamp('schedule', 'send_data')
 
