@@ -61,6 +61,8 @@ class WorkerProc(Process):
             datas.append(data_b)
             timestamp('worker_proc', 'get_data')
 
+            
+
             # start doing inference
             # frontend_scheduler will directly put
             # mod_list[0] in to self.complete_queue_trans

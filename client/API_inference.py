@@ -3,6 +3,7 @@ import time
 import struct
 import statistics
 import pickle
+from pathlib import Path
 
 from task.helper import get_data
 from util.util import TcpClient, timestamp
@@ -38,7 +39,10 @@ def main():
     for db in data_list:
         data_b = db.numpy().tobytes()
         data_list_b.append(data_b)
-    pickle.dump(data_list, open("saveData.py", "wb"))
+
+
+    with open('Ross/PipeSwitch_Plus/pipeswitch', 'wb') as f:
+        pickle.dump(data_list, f)
 
     data_b = data_list_b[0]
     length = len(data_b)
