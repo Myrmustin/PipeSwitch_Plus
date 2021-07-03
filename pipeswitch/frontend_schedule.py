@@ -1,4 +1,4 @@
-from pipeswitch.frontend_tcp import regularFrontEndTcp
+import pipeswitch.frontend_tcp
 import threading
 import torch
 import importlib
