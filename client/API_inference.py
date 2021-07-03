@@ -41,7 +41,7 @@ def main():
         data_list_b.append(data_b)
 
 
-    with open('~/Ross/PipeSwitch_Plus/pipeswitch', 'wb') as f:
+    with open('/home/ubuntu/Ross/PipeSwitch_Plus/pipeswitch', 'wb') as f:
         pickle.dump(data_list, f)
 
     data_b = data_list_b[0]
