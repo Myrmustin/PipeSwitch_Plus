@@ -1,3 +1,4 @@
+import client.API_inference
 import threading
 import struct
 
@@ -28,6 +29,8 @@ class FrontendTcpThd(threading.Thread):
             #stri = self.regularFrontEndTcp()
             #if(stri == "stop"):
                 #break
+            self.qout.put((self.agent, type))
+            
             model_name_length_b = self.agent.recv(4)
             print("Recieved model name length in bytes:" + str(model_name_length_b) )
             model_name_length = struct.unpack('I', model_name_length_b)[0]
@@ -39,17 +42,30 @@ class FrontendTcpThd(threading.Thread):
             model_name_b = self.agent.recv(model_name_length)
             model_name = model_name_b.decode()
 
-            self.qout.put((self.agent, model_name))
+            self.qout.put(model_name)
             timestamp('tcp', 'get_name')
 
-            data_length_b = self.agent.recv(4)
-            data_length = struct.unpack('I', data_length_b)[0]
+            if(type == "requestAwareSend;3"):
+                arr = type.split(';')
+                for index in range (arr[1]):
+                    data_length_b = self.agent.recv(4)
+                    data_length = struct.unpack('I', data_length_b)[0]
 
-            if data_length > 0:
-                data_b = self.agent.recv(data_length)
+                    if data_length > 0:
+                        data_b = self.agent.recv(data_length)
+                    else:
+                        data_b = None
+                    timestamp('tcp', 'get_data')
+                    self.qout.put(data_b)     
             else:
-                data_b = None
-            timestamp('tcp', 'get_data')
+                data_length_b = self.agent.recv(4)
+                data_length = struct.unpack('I', data_length_b)[0]
+
+                if data_length > 0:
+                    data_b = self.agent.recv(data_length)
+                else:
+                    data_b = None
+                timestamp('tcp', 'get_data')
             self.qout.put(data_b)
             timestamp('tcp', 'enqueue_request')
             #return "OK"               
