@@ -25,7 +25,9 @@ class FrontendTcpThd(threading.Thread):
 
             type = type_b.decode()
             print("Type AFTER decode is : " + type)
-            self.regularFrontEndTcp()
+            str = self.regularFrontEndTcp()
+            if(str == "stop"):
+                break
 
             
     def regularFrontEndTcp(self):
@@ -36,7 +38,7 @@ class FrontendTcpThd(threading.Thread):
 
         if model_name_length == 0:
             #break
-            None
+            return "stop"
         model_name_b = self.agent.recv(model_name_length)
         model_name = model_name_b.decode()
 
@@ -53,7 +55,7 @@ class FrontendTcpThd(threading.Thread):
         timestamp('tcp', 'get_data')
         self.qout.put(data_b)
         timestamp('tcp', 'enqueue_request')
-
+        return "OK"
 
         def modifiedFrontEndTcp():
             return None
