@@ -25,9 +25,9 @@ class FrontendTcpThd(threading.Thread):
 
             type = type_b.decode()
             print("Type AFTER decode is : " + type)
-            stri = self.regularFrontEndTcp()
-            if(stri == "stop"):
-                break
+            #stri = self.regularFrontEndTcp()
+            #if(stri == "stop"):
+                #break
             model_name_length_b = self.agent.recv(4)
             print("Recieved model name length in bytes:" + str(model_name_length_b) )
             model_name_length = struct.unpack('I', model_name_length_b)[0]
