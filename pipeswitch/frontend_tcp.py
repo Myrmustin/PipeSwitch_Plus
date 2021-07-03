@@ -25,8 +25,8 @@ class FrontendTcpThd(threading.Thread):
 
             type = type_b.decode()
             print("Type AFTER decode is : " + type)
-            str = self.regularFrontEndTcp()
-            if(str == "stop"):
+            stri = self.regularFrontEndTcp()
+            if(stri == "stop"):
                 break
 
             
