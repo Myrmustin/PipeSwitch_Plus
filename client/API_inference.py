@@ -2,6 +2,7 @@ import sys
 import time
 import struct
 import statistics
+import pickle
 
 from task.helper import get_data
 from util.util import TcpClient, timestamp
@@ -11,58 +12,67 @@ def main():
     batch_size = int(sys.argv[2])
     model_name_list = model_name.split(';')
     
+    data_list = []
+    for mod in model_name_list:
+        data = get_data(mod, batch_size)
+        data_list.append(data)
     
     print('List: ' + str(model_name_list))
     
     latency_list = []
-    for cur_model in model_name_list:
-        timestamp('client', 'before_request')
+    timestamp('client', 'before_request')
 
-        data = get_data(cur_model, batch_size)
-        
-        # Connect
-        client = TcpClient('localhost', 12345)
-        timestamp('client', 'after_connect')
-        time_1 = time.time()
+    
+    # Connect
+    client = TcpClient('localhost', 12345)
+    timestamp('client', 'after_connect')
+    time_1 = time.time()
 
-        # Serialize data
-        task_name = cur_model + '_inference'
-        task_name_b = task_name.encode()
-        task_name_length = len(task_name_b)
-        task_name_length_b = struct.pack('I', task_name_length)
-        data_b = data.numpy().tobytes()
-        length = len(data_b)
-        length_b = struct.pack('I', length)
-        timestamp('client', 'after_serialization')
+    # Serialize data
+    task_name = model_name + '_inference'
+    task_name_b = task_name.encode()
+    task_name_length = len(task_name_b)
+    task_name_length_b = struct.pack('I', task_name_length)
+    
+    data_list_b = []
+    for db in data_list:
+        data_b = db.numpy().tobytes()
+        data_list_b.append(data_b)
+    pickle.dump(data_list, open("saveData.py", "wb"))
 
-        print("N: " + task_name + ". CurM: " + cur_model)
+    data_b = data_list_b[0]
+    length = len(data_b)
+    length_b = struct.pack('I', length)
+    timestamp('client', 'after_serialization')
 
-        # Send Data
-        client.send(task_name_length_b)
-        client.send(task_name_b)
-        client.send(length_b)
-        client.send(data_b)
-        timestamp('client', 'after_send')
+    print("N: " + task_name + ". CurM: " )
 
-        # Get reply
-        reply_b = client.recv(4)
-        reply = reply_b.decode()
-        if reply == 'FAIL':
-            timestamp('client', 'FAIL')
-            break
-        timestamp('client', 'after_reply')
-        time_2 = time.time()
+    # Send Data
+    client.send(task_name_length_b)
+    client.send(task_name_b)
+    client.send(length_b)
+    client.send(data_b)
+    timestamp('client', 'after_send')
 
-        model_name_length = 0
-        model_name_length_b = struct.pack('I', model_name_length)
-        client.send(model_name_length_b)
-        timestamp('client', 'close_training_connection')
-        
-        timestamp('**********', '**********')
-        latency = (time_2 - time_1) * 1000
-        latency_list.append(latency)
-        print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
-        #time.sleep(2)
+    # Get reply
+    reply_b = client.recv(4)
+    reply = reply_b.decode()
+    if reply == 'FAIL':
+        timestamp('client', 'FAIL')
+        #break
+    timestamp('client', 'after_reply')
+    time_2 = time.time()
+
+    model_name_length = 0
+    model_name_length_b = struct.pack('I', model_name_length)
+    client.send(model_name_length_b)
+    timestamp('client', 'close_training_connection')
+    
+    timestamp('**********', '**********')
+    latency = (time_2 - time_1) * 1000
+    latency_list.append(latency)
+    print("Inference request on machine X using model " + model_name + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
+    #time.sleep(2)
     
 
 if __name__ == '__main__':

@@ -56,14 +56,9 @@ class WorkerProc(Process):
             timestamp('worker_proc', 'get_model')
             model_name_p = model_name.replace('_inference','')
             data_b = self.pipe.recv()
-            data_1 = get_data(model_name_p, 8)
-            data_2 = get_data(model_name_p, 8)
-            data_1_b = data_1.numpy().tobytes()
-            data_2_b = data_2.numpy().tobytes()
+           
             datas = []
             datas.append(data_b)
-            datas.append(data_1_b)
-            datas.append(data_2_b)
             timestamp('worker_proc', 'get_data')
 
             # start doing inference
