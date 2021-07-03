@@ -13,6 +13,7 @@ def main():
     model_name = sys.argv[1]
     batch_size = int(sys.argv[2])
     model_name_list = model_name.split(';')
+    model_name = model_name_list[0]
     
     data_list = []
     for mod in model_name_list:
