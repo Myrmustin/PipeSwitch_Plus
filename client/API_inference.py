@@ -35,12 +35,9 @@ def main():
         length_b = struct.pack('I', length)
         timestamp('client', 'after_serialization')
 
-        print("N: " + task_name)
-        print("CurM: " + cur_model)
-        
+        print("N: " + task_name + ". CurM: " + cur_model)
 
         # Send Data
-    
         client.send(task_name_length_b)
         client.send(task_name_b)
         client.send(length_b)
@@ -64,9 +61,8 @@ def main():
         timestamp('**********', '**********')
         latency = (time_2 - time_1) * 1000
         latency_list.append(latency)
-        latency = (time_2 - time_1) * 1000
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
-        time.sleep(2)
+        #time.sleep(2)
     
 
 if __name__ == '__main__':
