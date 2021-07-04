@@ -61,7 +61,8 @@ class WorkerProc(Process):
            
             datas = []
             datas = pickle.load( open( "savedData.p", "rb" ) )
-
+            if('_training' in model_name):
+                datas = [data_b]
             timestamp('worker_proc', 'get_data')
 
             
