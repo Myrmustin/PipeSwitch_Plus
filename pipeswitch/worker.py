@@ -54,16 +54,8 @@ class WorkerProc(Process):
             model_summary = model_map[hash(model_name)]
             TERMINATE_SIGNAL[0] = 1
             timestamp('worker_proc', 'get_model')
-            model_name_p = model_name.replace('_inference','')
             data_b = self.pipe.recv()
-            data_1 = get_data(model_name_p, 8)
-            data_2 = get_data(model_name_p, 8)
-            data_1_b = data_1.numpy().tobytes()
-            data_2_b = data_2.numpy().tobytes()
-            datas = []
-            datas.append(data_b)
-            datas.append(data_1_b)
-            datas.append(data_2_b)
+            
             timestamp('worker_proc', 'get_data')
 
             # start doing inference
@@ -74,15 +66,15 @@ class WorkerProc(Process):
                     self.pipe.send('FNSH')
                     agent.send(b'FNSH')
                 
-                for ind in datas:
-                    timestamp('worker', 'STARTING INFERENCE BABY')
-                    print("----------Execute number---------")
-                    with torch.cuda.stream(model_summary.cuda_stream_for_computation):
-                        output = model_summary.execute(ind)
-                        print ('----------Get output: ', output)
-                        del output
-                    #model_summary.reset_initialized(model_summary.model)
-                    timestamp('worker', 'ENDING INFERENCE BABY')
+                
+                timestamp('worker', 'STARTING INFERENCE BABY')
+                
+                with torch.cuda.stream(model_summary.cuda_stream_for_computation):
+                    output = model_summary.execute(data_b)
+                    print ('----------Get output: ', output)
+                    del output
+                #model_summary.reset_initialized(model_summary.model)
+                timestamp('worker', 'ENDING INFERENCE BABY')
 
                 if 'inference' in model_name:
                     self.pipe.send('FNSH')
@@ -94,5 +86,5 @@ class WorkerProc(Process):
             # start do cleaning
             TERMINATE_SIGNAL[0] = 0
             timestamp('worker_comp_thd', 'complete')
-            #model_summary.reset_initialized(model_summary.model)
+            model_summary.reset_initialized(model_summary.model)
             
