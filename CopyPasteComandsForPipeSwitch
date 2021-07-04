@@ -48,3 +48,7 @@ bert_base_inference
 bert_base_training
 resnet34_inference
 resnet34_training
+resnext101_32x8d_inference
+resnext101_32x8d_training
+resnext50_32x4d_inference
+resnext50_32x4d_training

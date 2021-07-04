@@ -74,9 +74,9 @@ def main():
         #Switching case:
         latency2 = training('resnet152', 8)
         time.sleep(2)
-        latency1 = inference('resnet152', 8)
+        latency1 = inference('bert_base', 8)
         latency_list.append(latency1)
-    print('Latency for 50 runs requests : ' + str(latency_list))
+    print('Latency for 50 runs SWITCHING from RESNET152--->BertBase : ' + str(latency_list))
     
 def inference(model_name_list,batch_size):
     
