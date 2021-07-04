@@ -101,7 +101,7 @@ def main():
         latency1 = inference(listM, 8)
         latency_list.append(latency1)
 
-        """#Inception_V3 --> Bert_Base
+        #Inception_V3 --> Bert_Base
         latency2 = training('inception_v3', 8)
         time.sleep(2)
         listM = ['bert_base']
@@ -113,7 +113,7 @@ def main():
         time.sleep(2)
         listM = ['resnet152']
         latency1 = inference(listM, 8)
-        latency_list.append(latency1)"""
+        latency_list.append(latency1)
 
     print('Latency for 50 runs SWITCHING from RESNET152---> : ' + listM[0] + ' is '+ str(latency_list))
     
