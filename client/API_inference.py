@@ -6,9 +6,17 @@ import statistics
 from task.helper import get_data
 from util.util import TcpClient, timestamp
 
+
 def main():
     model_name = sys.argv[1]
-    batch_size = int(sys.argv[2])
+    batch_size = int(sys.argv[2]) 
+    latency_list = []
+    for i in range(100):
+        latency = inference(model_name,batch_size)
+        latency_list.append(latency)
+        time.sleep(0.5)
+    print('Latency for all runs: ' + str(latency_list) )    
+def inference(model_name, batch_size):
     model_name_list = model_name.split(';')
     
     
@@ -62,6 +70,7 @@ def main():
         latency = (time_2 - time_1) * 1000
         latency_list.append(latency)
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
+        return latency
         #time.sleep(2)
     
 
