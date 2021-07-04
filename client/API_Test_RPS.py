@@ -12,10 +12,13 @@ def main():
     model_name = sys.argv[1]
     batch_size = int(sys.argv[2])
     model_name_list = model_name.split(';')
+    latency_list = []
     for i in range(100):
-        inference(model_name_list,batch_size)
+        latency = inference(model_name_list,batch_size)
+        latency_list.append(latency)
         time.sleep(5)
-    return None
+    
+    print('Latency for 100 requests : ' + str(latency_list))
     
 def inference(model_name_list,batch_size):
     
@@ -71,6 +74,7 @@ def inference(model_name_list,batch_size):
         latency = (time_2 - time_1) * 1000
         latency_list.append(latency)
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
+        return latency_list
         #time.sleep(2)
     
 if __name__ == '__main__':
