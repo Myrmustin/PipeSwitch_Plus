@@ -44,5 +44,3 @@ ps a :  shoW all processesps
 
 resnet152_inference
 resnet152_training
-resnext101_32x8d_inference
-resnext101_32x8d_training
