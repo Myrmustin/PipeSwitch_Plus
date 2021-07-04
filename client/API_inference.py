@@ -21,6 +21,8 @@ def main():
     for batch in batched:
         model_name = batch.split(';')[0]
         model_name_list = batch.split(';')
+        if (model_name_list[-1] == ''):
+            model_name_list = model_name_list[:-1]
         print('Curent batch of requests : ' + str(model_name_list))
 
         data_list = []
