@@ -58,7 +58,7 @@ def main():
         
         #complex 3
         #  4x inception 1x Rnext101 4x inception 1x bert_base 4x inception 1x Rnext50 4x inception
-        tmp = np.array_split(I3count,4)
+        """tmp = np.array_split(I3count,4)
         latency1 = inference(tmp[0],batch_size) #4 inceptions
         print('len : ' + str(len(RN101Mcount)))
         latency2 = inference(RN101Mcount,batch_size)
@@ -69,7 +69,13 @@ def main():
         latency7 = inference(tmp[3],batch_size) #4 inceptions
         total_latency = latency1 + latency2 + latency3 + latency4 + latency5 + latency6 + latency7
         latency_list.append(total_latency)
-        time.sleep(0.5)
+        time.sleep(0.5)"""
+
+        #Switching case:
+        latency2 = training('resnet152', 8)
+        time.sleep(2)
+        latency1 = inference('resnet152', 8)
+        latency_list.append(latency1)
     print('Latency for 50 runs requests : ' + str(latency_list))
     
 def inference(model_name_list,batch_size):
@@ -147,3 +153,61 @@ def inference(model_name_list,batch_size):
     
 if __name__ == '__main__':
     main()
+
+
+def send_request(client, task_name, data):
+    timestamp('client', 'before_request_%s' % task_name)
+
+    # Serialize data
+    task_name_b = task_name.encode()
+    task_name_length = len(task_name_b)
+    task_name_length_b = struct.pack('I', task_name_length)
+
+    if data is not None:
+        data_b = data.numpy().tobytes()
+        length = len(data_b)
+    else:
+        data_b = None
+        length = 0
+    length_b = struct.pack('I', length)
+    timestamp('client', 'after_inference_serialization')
+
+    # Send Data
+    client.send(task_name_length_b)
+    client.send(task_name_b)
+    client.send(length_b)
+    if data_b is not None:
+        client.send(data_b)
+    timestamp('client', 'after_request_%s' % task_name)
+
+def recv_response(client):
+    reply_b = client.recv(4)
+    reply = reply_b.decode()
+    timestamp('client', 'after_reply')
+
+def close_connection(client):
+    model_name_length = 0
+    model_name_length_b = struct.pack('I', model_name_length)
+    client.send(model_name_length_b)
+    timestamp('client', 'close_connection')
+
+def training(model_name, batch_size):
+    
+    print('Start ')
+    task_name_train = '%s_training' % model_name
+
+    # Load image
+    data = get_data(model_name, batch_size)
+
+    # Send training request
+    time_1 = time.time()
+    client_train = TcpClient('localhost', 12345)
+    send_request(client_train, task_name_train, None)
+   
+    #Recieve responce from training
+    recv_response(client_train)
+    close_connection(client_train)
+    time_2 = time.time()
+
+    latency = (time_2 - time_1) * 1000
+    print("Training of " + model_name + " on machine X completed for: " + str(latency) + "ms. ")
