@@ -41,7 +41,8 @@ python3.8 API_inference.py "inception_v3;inception_v3;inception_v3;inception_v3;
 ps a :  shoW all processesps 
 
 
-resnet34_inference
-resnet34_training
-resnext50_32x4d_inference
-resnext50_32x4d_training
+
+resnet152_inference
+resnet152_training
+resnext101_32x8d_inference
+resnext101_32x8d_training
