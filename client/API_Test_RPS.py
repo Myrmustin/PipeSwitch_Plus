@@ -13,13 +13,17 @@ def main():
     model_name = sys.argv[1]
     batch_size = int(sys.argv[2])
     model_name_list = model_name.split(';')
+    
+    #those are hardcoded examples 
+    BBcount = [i for i, x in enumerate(model_name_list) if x == "bert_base"]
+    RNcount = [i for i, x in enumerate(model_name_list) if x == "resnet152"]
     latency_list = []
     
     for i in range(2):
         print('_____________DRY RUN__________')
         latency = inference(model_name_list,batch_size)
         time.sleep(0.5)
-    for i in range(10):
+    for i in range(50):
         print('_____________RUN NUMBER ' + str(i) + ' __________')
         latency = inference(model_name_list,batch_size)
         latency_list.append(latency)

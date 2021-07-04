@@ -73,7 +73,7 @@ class WorkerProc(Process):
                 if 'training' in model_name:
                     self.pipe.send('FNSH')
                     agent.send(b'FNSH')
-                index = 0;
+                index = 0
                 for ind in datas:
                     timestamp('worker', str('STARTING INFERENCE BABY ' + str(index)))
                     print("----------Execute number---------")
@@ -94,5 +94,5 @@ class WorkerProc(Process):
             # start do cleaning
             TERMINATE_SIGNAL[0] = 0
             timestamp('worker_comp_thd', 'complete')
-            #model_summary.reset_initialized(model_summary.model)
+            model_summary.reset_initialized(model_summary.model)
             
