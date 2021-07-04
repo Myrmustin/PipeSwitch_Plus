@@ -60,11 +60,12 @@ def main():
         #  4x inception 1x Rnext101 4x inception 1x bert_base 4x inception 1x Rnext50 4x inception
         tmp = np.array_split(I3count,4)
         latency1 = inference(tmp[0],batch_size) #4 inceptions
-        latency2 = inference(list(RN101Mcount),batch_size)
+        print('len : ' + len(RN101Mcount))
+        latency2 = inference(RN101Mcount,batch_size)
         latency3 = inference(tmp[1],batch_size) #4 inceptions
-        latency4 = inference(list(BBcount),batch_size)
+        latency4 = inference(BBcount,batch_size)
         latency5 = inference(tmp[2],batch_size) #4 inceptions
-        latency6 = inference(list(RN50Mcount),batch_size) 
+        latency6 = inference(RN50Mcount,batch_size) 
         latency7 = inference(tmp[3],batch_size) #4 inceptions
         total_latency = latency1 + latency2 + latency3 + latency4 + latency5 + latency6 + latency7
         latency_list.append(total_latency)
