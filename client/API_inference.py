@@ -76,7 +76,7 @@ def inference(model_name, batch_size):
     latency_sum = sum(latency_list)
     
     print(" 8 Inference requests on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency_sum) + "ms. ")
-    return 
+    return latency_sum
 
 if __name__ == '__main__':
     main()
