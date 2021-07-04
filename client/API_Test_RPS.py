@@ -17,20 +17,31 @@ def main():
     #those are hardcoded examples 
     BBcount = [i for i, x in enumerate(model_name_list) if x == "bert_base"]
     RNcount = [i for i, x in enumerate(model_name_list) if x == "resnet152"]
+    RN101count = [i for i, x in enumerate(model_name_list) if x == "resnext101_32x8d"]
+    I3count = [i for i, x in enumerate(model_name_list) if x == "inception_v3"]
+    
+    
     latency_list = []
     
-    for i in range(2):
+    """for i in range(2):
         print('_____________DRY RUN__________')
-        latency = inference(model_name_list,batch_size)
-        time.sleep(0.5)
+        latency1 = inference(BBcount,batch_size)
+        latency2 = inference(I3count,batch_size)
+        latency3 = inference(RNcount,batch_size)
+        latency4 = inference(RN101count,batch_size)
+        time.sleep(0.5)"""
     for i in range(50):
         print('_____________RUN NUMBER ' + str(i) + ' __________')
-        latency = inference(model_name_list,batch_size)
-        latency_list.append(latency)
+        latency1 = inference(BBcount,batch_size)
+        latency2 = inference(I3count,batch_size)
+        latency3 = inference(RNcount,batch_size)
+        latency4 = inference(RN101count,batch_size)
+        total_latency = latency1 + latency2 + latency3 + latency4
+        latency_list.append(total_latency)
         time.sleep(0.5)
         
     
-    print('Latency for 100 requests : ' + str(latency_list))
+    print('Latency for 50 runs requests : ' + str(latency_list))
     
 def inference(model_name_list,batch_size):
     
