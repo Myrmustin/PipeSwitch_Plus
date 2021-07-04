@@ -21,7 +21,7 @@ def inference(model_name, batch_size):
     
     
     print('List: ' + str(model_name_list))
-    
+    time_o = time.time()
     latency_list = []
     for cur_model in model_name_list:
         timestamp('client', 'before_request')
@@ -70,9 +70,10 @@ def inference(model_name, batch_size):
         latency = (time_2 - time_1) * 1000
         latency_list.append(latency)
         print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
-        return latency
+        
         #time.sleep(2)
-    
+    time_p = time.time()
+    return (time_p - time_o)*1000
 
 if __name__ == '__main__':
     main()
