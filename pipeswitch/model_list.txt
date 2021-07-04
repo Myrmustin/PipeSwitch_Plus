@@ -1,4 +1,3 @@
-
 inception_v3_inference
 inception_v3_training
 bert_base_inference
