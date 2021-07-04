@@ -113,9 +113,9 @@ def main():
     print('Inception ---> BertBase : '+ str(I3_t_BB_i))
     print('Inception ---> ResNet152 : '+ str(I3_t_RN_i))
 
-    RN_t_RN_i = Average([])
-    BB_t_BB_i = Average([])
-    I3_t_I3_i = Average([])
+    RN_t_RN_i = 80.487001
+    BB_t_BB_i = 62.015140
+    I3_t_I3_i = 65.726674
     print('ResNet152 ---> ResNet152 : '+ str(RN_t_RN_i))
     print('Bert_base ---> Bert_Base : '+ str(BB_t_BB_i))
     print('Inception ---> Inception : '+ str(I3_t_I3_i))
@@ -123,6 +123,10 @@ def main():
     RN_i = 76.353168
     BB_i = 55.139515
     I3_i = 65.154070
+    print('ResNet152 inference : '+ str(RN_i))
+    print('Bert_base inference : '+ str(BB_i))
+    print('Inception inference : '+ str(I3_i))
+
 def Average(lst):
     return sum(lst) / len(lst)    
 if __name__ == '__main__':
