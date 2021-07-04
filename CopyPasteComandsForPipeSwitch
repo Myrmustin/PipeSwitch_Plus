@@ -39,3 +39,9 @@ python3.8 API_inference.py "resnet34;resnet34;resnet34;resnext50_32x4d;resnext50
 python3.8 API_inference.py "inception_v3;inception_v3;inception_v3;inception_v3;resnext101_32x8d;inception_v3;inception_v3;inception_v3;inception_v3;bert_base;inception_v3;inception_v3;inception_v3;inception_v3;resnext50_32x4d;inception_v3;inception_v3;inception_v3;inception_v3" 8
 
 ps a :  shoW all processesps 
+
+
+resnet34_inference
+resnet34_training
+resnext50_32x4d_inference
+resnext50_32x4d_training
