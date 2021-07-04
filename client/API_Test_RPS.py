@@ -43,8 +43,8 @@ def main():
         
         #complex test case 2
         # 3x Resnet24 | 2x Resnext 50 | 3x Resnet34 | 2x Resnext50 | 3x Resnet34 
-        tmp = np.array_split(RN34count,3)
-        tmp2 = np.array_split(RN50Mcount,2)
+        tmp = numpy.array_split(RN34count,3)
+        tmp2 = numpy.array_split(RN50Mcount,2)
         latency1 = inference(tmp[0],batch_size)
         latency2 = inference(tmp2[0],batch_size)
         latency3 = inference(tmp[1],batch_size)
