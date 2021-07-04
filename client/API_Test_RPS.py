@@ -87,7 +87,7 @@ def main():
         latency1 = inference(listM, 8)
         latency_list.append(latency1)
 
-        """#Bert_base --> Inception_v3
+        #Bert_base --> Inception_v3
         latency2 = training('bert_base', 8)
         time.sleep(2)
         listM = ['inception_v3']
@@ -101,7 +101,7 @@ def main():
         latency1 = inference(listM, 8)
         latency_list.append(latency1)
 
-        #Inception_V3 --> Bert_Base
+        """#Inception_V3 --> Bert_Base
         latency2 = training('inception_v3', 8)
         time.sleep(2)
         listM = ['bert_base']
