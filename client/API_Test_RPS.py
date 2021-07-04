@@ -17,9 +17,10 @@ def main():
     #those are hardcoded examples 
     BBcount = [obj for obj in model_name_list if obj == "bert_base"]
     RNcount = [obj for obj in model_name_list if obj == "resnet152"]
-    RN101count = [obj for obj in model_name_list if obj == "resnext101_32x8d"]
     I3count = [obj for obj in model_name_list if obj == "inception_v3"]
-    
+    RN101Mcount = [obj for obj in model_name_list if obj == "resnext101_32x8d"]
+    RN34count = [obj for obj in model_name_list if obj == "resnet34"]
+    RN50Mcount = [obj for obj in model_name_list if obj == "resnext50_32x4d"]
     
     latency_list = []
     
@@ -32,15 +33,30 @@ def main():
         time.sleep(0.5)"""
     for i in range(50):
         print('_____________RUN NUMBER ' + str(i) + ' __________')
-        latency1 = inference(BBcount,batch_size)
+        
+
+        # complex test case 1
+        """latency1 = inference(BBcount,batch_size)
         latency2 = inference(I3count,batch_size)
         latency3 = inference(RNcount,batch_size)
-        latency4 = inference(RN101count,batch_size)
-        total_latency = latency1 + latency2 + latency3 + latency4
+        latency4 = inference(RN101Mcount,batch_size)"""
+        
+        #complex test case 2
+        # 3x Resnet24 | 2x Resnext 50 | 3x Resnet34 | 2x Resnext50 | 3x Resnet34 
+        tmp = np.array_split(RN34count,3)
+        tmp2 = np.array_split(RN50Mcount,2)
+        latency1 = inference(tmp[0],batch_size)
+        latency2 = inference(tmp2[0],batch_size)
+        latency3 = inference(tmp[1],batch_size)
+        latency4 = inference(tmp2[1],batch_size)
+        latency5 = inference(tmp[2],batch_size)
+        total_latency = latency1 + latency2 + latency3 + latency4 + latency5
         latency_list.append(total_latency)
         time.sleep(0.5)
         
     
+
+
     print('Latency for 50 runs requests : ' + str(latency_list))
     
 def inference(model_name_list,batch_size):
