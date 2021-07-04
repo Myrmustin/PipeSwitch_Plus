@@ -32,7 +32,7 @@ python3.8 API_Test_RPS.py "inception_v3;inception_v3;inception_v3;inception_v3;i
 
 python3.8 API_Test_RPS.py "bert_base;bert_base;bert_base;bert_base;inception_v3;resnet152;resnet152;resnet152;resnet152;resnet152;resnext101_32x8d;resnext101_32x8d" 8
 python3.8 API_Test_RPS.py "resnet34;resnet34;resnet34;resnext50_32x4d;resnext50_32x4d;resnet34;resnet34;resnet34;resnext50_32x4d;resnext50_32x4d;resnet34;resnet34;resnet34" 8
-python3.8 API_Test_RPS.py "inception_v3;inception_v3;inception_v3;inception_v3;resnext101_32x8;inception_v3;inception_v3;inception_v3;inception_v3;bert_base;;inception_v3;inception_v3;inception_v3;inception_v3;resnext50_32x4d" 8
+python3.8 API_Test_RPS.py "inception_v3;inception_v3;inception_v3;inception_v3;resnext101_32x8;inception_v3;inception_v3;inception_v3;inception_v3;bert_base;inception_v3;inception_v3;inception_v3;inception_v3;resnext50_32x4dinception_v3;inception_v3;inception_v3;inception_v3" 8
 ps a :  shoW all processesps 
 
 resnet152_inference
