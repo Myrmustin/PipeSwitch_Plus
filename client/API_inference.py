@@ -72,9 +72,10 @@ def inference(model_name, batch_size):
         #print("Inference request on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
         
         #time.sleep(2)
-    time_p = time.time()
-    latency_p = (time_p - time_o)*1000
-    print(" 8 Inference requests on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency_p) + "ms. ")
+    
+    latency_sum = sum(latency_list)
+    
+    print(" 8 Inference requests on machine X using model " + cur_model + " (" + str(batch_size) + " batchsize) completed for: " + str(latency_sum) + "ms. ")
     return 
 
 if __name__ == '__main__':
