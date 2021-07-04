@@ -15,13 +15,15 @@ def main():
     model_name_list = model_name.split(';')
     latency_list = []
     
-    
-    
+    for i in range(2):
+        print('_____________DRY RUN__________')
+        latency = inference(model_name_list,batch_size)
+        time.sleep(0.5)
     for i in range(10):
         print('_____________RUN NUMBER ' + str(i) + ' __________')
         latency = inference(model_name_list,batch_size)
         latency_list.append(latency)
-        time.sleep(1)
+        time.sleep(0.5)
         
     
     print('Latency for 100 requests : ' + str(latency_list))
@@ -96,7 +98,7 @@ def inference(model_name_list,batch_size):
     latency_list.append(latency)
     print("Inference request on machine X using model " + model_name + " (" + str(batch_size) + " batchsize) completed for: " + str(latency) + "ms. ")
     os.remove("/home/ubuntu/Ross/PipeSwitch_Plus/pipeswitch/savedData.p")
-
+    return latency
     #time.sleep(2)
     
 if __name__ == '__main__':
