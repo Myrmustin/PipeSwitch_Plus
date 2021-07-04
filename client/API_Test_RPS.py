@@ -40,11 +40,12 @@ def main():
         """latency1 = inference(BBcount,batch_size)
         latency2 = inference(I3count,batch_size)
         latency3 = inference(RNcount,batch_size)
-        latency4 = inference(RN101Mcount,batch_size)"""
-        
+        latency4 = inference(RN101Mcount,batch_size)
+        total_latency = latency1 + latency2 + latency3 + latency4
+        latency_list.append(total_latency)"""
         #complex test case 2
         # 3x Resnet24 | 2x Resnext 50 | 3x Resnet34 | 2x Resnext50 | 3x Resnet34 
-        tmp = np.array_split(RN34count,3)
+        """tmp = np.array_split(RN34count,3)
         tmp2 = np.array_split(RN50Mcount,2)
         latency1 = inference(tmp[0],batch_size)
         latency2 = inference(tmp2[0],batch_size)
@@ -53,11 +54,21 @@ def main():
         latency5 = inference(tmp[2],batch_size)
         total_latency = latency1 + latency2 + latency3 + latency4 + latency5
         latency_list.append(total_latency)
-        time.sleep(0.5)
+        time.sleep(0.5)"""
         
-    
-
-
+        #complex 3
+        #  inception inception inception inception Rnext101 inception inception inception inception bert_base inception inception inception inception rnext50 inception inception inception inception
+        tmp = np.array_split(I3count,4)
+        latency1 = inference(tmp[0],batch_size) #4 inceptions
+        latency2 = inference(RN101Mcount,batch_size)
+        latency3 = inference(tmp[1],batch_size) #4 inceptions
+        latency4 = inference(BBcount,batch_size)
+        latency5 = inference(tmp[2],batch_size) #4 inceptions
+        latency6 = inference(RN50Mcount,batch_size) 
+        latency7 = inference(tmp[3],batch_size) #4 inceptions
+        total_latency = latency1 + latency2 + latency3 + latency4 + latency5 + latency6 + latency7
+        latency_list.append(total_latency)
+        time.sleep(0.5)
     print('Latency for 50 runs requests : ' + str(latency_list))
     
 def inference(model_name_list,batch_size):
