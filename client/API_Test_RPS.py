@@ -15,6 +15,7 @@ def main():
     model_name_list = model_name.split(';')
     latency_list = []
     for i in range(100):
+        print('_____________RUN NUMBER ' + str(i) + ' __________')
         latency = inference(model_name_list,batch_size)
         latency_list.append(latency)
         
