@@ -11,7 +11,7 @@ def main():
     model_name = sys.argv[1]
     batch_size = int(sys.argv[2]) 
     latency_list = []
-    for i in range(100):
+    for i in range(50):
         latency = inference(model_name,batch_size)
         latency_list.append(latency)
         time.sleep(0.5)
