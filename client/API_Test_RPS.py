@@ -44,7 +44,7 @@ def main():
         total_latency = latency1 + latency2 + latency3 + latency4
         latency_list.append(total_latency)"""
         #complex test case 2
-        # 3x Resnet24 | 2x Resnext 50 | 3x Resnet34 | 2x Resnext50 | 3x Resnet34 
+        # 3x Resnet34 | 2x Resnext 50 | 3x Resnet34 | 2x Resnext50 | 3x Resnet34 
         """tmp = np.array_split(RN34count,3)
         tmp2 = np.array_split(RN50Mcount,2)
         latency1 = inference(tmp[0],batch_size)
@@ -71,13 +71,51 @@ def main():
         latency_list.append(total_latency)
         time.sleep(0.5)"""
 
-        #Switching case:
+        #Switching cases:
+
+        #Resnet --> Bert_Base
+        latency2 = training('resnet152', 8)
+        time.sleep(2)
+        listM = ['bert_base']
+        latency1 = inference(listM, 8)
+        latency_list.append(latency1)
+
+        """#Resnet --> Inception_v3
         latency2 = training('resnet152', 8)
         time.sleep(2)
         listM = ['inception_v3']
         latency1 = inference(listM, 8)
         latency_list.append(latency1)
-    print('Latency for 50 runs SWITCHING from RESNET152--->InceptionV3 : ' + str(latency_list))
+
+        #Bert_base --> Inception_v3
+        latency2 = training('bert_base', 8)
+        time.sleep(2)
+        listM = ['inception_v3']
+        latency1 = inference(listM, 8)
+        latency_list.append(latency1)
+
+        #Bert_base --> ResNet152
+        latency2 = training('bert_base', 8)
+        time.sleep(2)
+        listM = ['resnet152']
+        latency1 = inference(listM, 8)
+        latency_list.append(latency1)
+
+        #Inception_V3 --> Bert_Base
+        latency2 = training('inception_v3', 8)
+        time.sleep(2)
+        listM = ['bert_base']
+        latency1 = inference(listM, 8)
+        latency_list.append(latency1)
+
+        #Inception_V3 --> ResNet152
+        latency2 = training('inception_v3', 8)
+        time.sleep(2)
+        listM = ['resnet152']
+        latency1 = inference(listM, 8)
+        latency_list.append(latency1)"""
+
+    print('Latency for 50 runs SWITCHING from RESNET152---> : ' + listM[0] + ' is '+ str(latency_list))
     
 def inference(model_name_list, batch_size):
     
