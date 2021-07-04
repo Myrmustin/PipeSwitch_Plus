@@ -60,9 +60,11 @@ class WorkerProc(Process):
             data_b = self.pipe.recv()
            
             datas = []
-            datas = pickle.load( open( "savedData.p", "rb" ) )
+            
             if('_training' in model_name):
                 datas = [data_b]
+            else:
+                datas = pickle.load( open( "savedData.p", "rb" ) )
             timestamp('worker_proc', 'get_data')
 
             
