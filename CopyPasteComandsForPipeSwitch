@@ -38,6 +38,7 @@ python3.8 API_inference.py "bert_base;bert_base;bert_base;bert_base;inception_v3
 python3.8 API_inference.py
 python3.8 API_inference.py
 
+python3.8 API_Test_RPS.py resnet152 8
 ps a :  shoW all processesps 
 
 resnet152_inference
