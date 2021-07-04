@@ -15,10 +15,10 @@ def main():
     model_name_list = model_name.split(';')
     
     #those are hardcoded examples 
-    BBcount = [i for i, x in enumerate(model_name_list) if x == "bert_base"]
-    RNcount = [i for i, x in enumerate(model_name_list) if x == "resnet152"]
-    RN101count = [i for i, x in enumerate(model_name_list) if x == "resnext101_32x8d"]
-    I3count = [i for i, x in enumerate(model_name_list) if x == "inception_v3"]
+    BBcount = [obj for obj in model_name_list if obj == "bert_base"]
+    RNcount = [obj for obj in model_name_list if obj == "resnet152"]
+    RN101count = [obj for obj in model_name_list if obj == "resnext101_32x8d"]
+    I3count = [obj for obj in model_name_list if obj == "inception_v3"]
     
     
     latency_list = []
