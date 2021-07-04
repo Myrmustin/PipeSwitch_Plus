@@ -74,11 +74,12 @@ def main():
         #Switching case:
         latency2 = training('resnet152', 8)
         time.sleep(2)
-        latency1 = inference('bert_base', 8)
+        listM = ['bert_base']
+        latency1 = inference(listM, 8)
         latency_list.append(latency1)
     print('Latency for 50 runs SWITCHING from RESNET152--->BertBase : ' + str(latency_list))
     
-def inference(model_name_list,batch_size):
+def inference(model_name_list, batch_size):
     
     model_name = model_name_list[0]
 
@@ -151,8 +152,7 @@ def inference(model_name_list,batch_size):
     return latency
     #time.sleep(2)
     
-if __name__ == '__main__':
-    main()
+
 
 
 def send_request(client, task_name, data):
@@ -211,3 +211,7 @@ def training(model_name, batch_size):
 
     latency = (time_2 - time_1) * 1000
     print("Training of " + model_name + " on machine X completed for: " + str(latency) + "ms. ")
+
+
+if __name__ == '__main__':
+    main()
