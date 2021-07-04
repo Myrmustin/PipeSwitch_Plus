@@ -23,7 +23,7 @@ def main():
     
 def inference(model_name_list,batch_size):
     
-    model_name = model_name_list.split(';')[0]
+    model_name = model_name_list[0]
 
     print('Curent batch of requests : ' + str(model_name_list))
 
