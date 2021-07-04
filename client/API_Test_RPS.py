@@ -17,7 +17,7 @@ def main():
     for i in range(100):
         latency = inference(model_name_list,batch_size)
         latency_list.append(latency)
-        time.sleep(5)
+        
     
     print('Latency for 100 requests : ' + str(latency_list))
     
