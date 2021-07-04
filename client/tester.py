@@ -34,6 +34,8 @@ def main():
     , 354.62284088134766, 316.3599967956543, 347.52511978149414, 317.547082901001, 320.3754425048828, 313.8546943664551, 324.17988777160645, 313.3211135864258, 310.57238578796387, 313.47131729125977   
     ]
 
+
+
     awgBB = Average(list_bertBase)
     awgRN = Average(list_Resnet)
     awgI3 = Average(list_inception)
@@ -41,9 +43,29 @@ def main():
     perR_BB = awgBB/6
     perR_RN = awgRN/6
     perR_I3 = awgI3/6
-    print('Avrage time for BB is : ' + str(awgBB) +' with a perRun of: ' + str(perR_BB))
-    print('Avrage time for RN is : ' + str(awgRN) +' with a perRun of: ' + str(perR_RN))
-    print('Avrage time for I3 is : ' + str(awgI3) +' with a perRun of: ' + str(perR_I3))
+    print('(Request aware PipeSwitch) Average time for BB is : ' + str(awgBB) +' with a perRun of: ' + str(perR_BB))
+    print('Request aware PipeSwitch) Average time for RN is : ' + str(awgRN) +' with a perRun of: ' + str(perR_RN))
+    print('Request aware PipeSwitch) Average time for I3 is : ' + str(awgI3) +' with a perRun of: ' + str(perR_I3))
+
+
+    list_bertBase_ps =[
+
+    ]
+    list_resnet_ps = [
+
+    ]
+    list_inception_ps = [
+        
+    ]
+    
+    awgBB_ps = Average(list_bertBase)
+    awgRN_ps = Average(list_Resnet)
+    awgI3_ps = Average(list_inception)
+
+    perR_BB_ps = awgBB_ps/6
+    perR_RN_ps = awgRN_ps/6
+    perR_I3_ps = awgI3_ps/6
+
 def Average(lst):
     return sum(lst) / len(lst)    
 if __name__ == '__main__':
