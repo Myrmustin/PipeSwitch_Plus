@@ -41,9 +41,9 @@ def main():
     perR_BB = awgBB/6
     perR_RN = awgRN/6
     perR_I3 = awgI3/6
-    print('Avrage time for BB is : ' + awgBB +' with a perRun of: ' + perR_BB)
-    print('Avrage time for RN is : ' + awgRN +' with a perRun of: ' + perR_RN)
-    print('Avrage time for I3 is : ' + awgI3 +' with a perRun of: ' + perR_I3)
+    print('Avrage time for BB is : ' + str(awgBB) +' with a perRun of: ' + str(perR_BB))
+    print('Avrage time for RN is : ' + str(awgRN) +' with a perRun of: ' + str(perR_RN))
+    print('Avrage time for I3 is : ' + str(awgI3) +' with a perRun of: ' + str(perR_I3))
 def Average(lst):
     return sum(lst) / len(lst)    
 if __name__ == '__main__':
