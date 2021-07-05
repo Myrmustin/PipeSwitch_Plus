@@ -16,7 +16,7 @@ def main():
     
     
     
-    model_name = model_name_list.split(';')[0]
+    model_name = model_name_list[0]
 
     print('Curent batch of requests : ' + str(model_name_list))
 
